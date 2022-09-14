@@ -9,8 +9,7 @@ namespace {
     Fl_Choice *choice;
     void choice_callback(Fl_Button *obj, void *)
     {
-        Manager::manager.downloadCandidate.version =
-                static_cast<size_t>( choice->value() ) ? static_cast<size_t>( choice->value() ) - 1 : 0;
+        Manager::manager.downloadCandidate.version = static_cast<size_t>(choice->value());
         update5();
     }
 }
@@ -33,9 +32,6 @@ void page_1()
     const std::vector<std::string>& versions =  Manager::manager.getVersions();
 
     choice = new Fl_Choice(200, 150, 15 * (12), 45);
-
-    choice->add("last version");
-
 
     for(auto &version : versions)
         choice->add(version.c_str());

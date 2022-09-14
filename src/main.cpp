@@ -44,12 +44,12 @@ int main(int argc, char **argv) {
     Manager::manager.getInfo();
 
     page_();
-    page_0();
     page_1();
     page_2();
     page_3();
     page_4();
     page_5();
+    page_0();
     page_6();
     page_7();
 

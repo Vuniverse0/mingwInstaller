@@ -40,7 +40,7 @@ const std::vector<size_t>& Manager::getRevsForCandidate()
 const std::vector<std::string>& Manager::getVersions()
 {
     if ( versions.empty() )
-        throw std::runtime_error("Please call Manager::setVersions before");
+        throw std::runtime_error("Please call Manager::getInfo before");
     return versions;
 }
 

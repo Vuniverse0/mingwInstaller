@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "lzma2201/C/CpuArch.h"
-
 #include "lzma2201/C/7z.h"
 #include "lzma2201/C/7zAlloc.h"
 #include "lzma2201/C/7zBuf.h"
