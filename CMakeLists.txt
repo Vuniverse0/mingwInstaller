@@ -27,6 +27,6 @@ add_executable(mingwInstaller
 add_link_options(-s)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fltk curl nlohmann_json::nlohmann_json lzma
-        /home/vuniverse/CLionProjects/mingwInstaller/src/lzma2201/C/sevenz.a)
+        ${PROJECT_SOURCE_DIR}/src/lzma2201/C/sevenz.a)
 
 #in linker option add -s
