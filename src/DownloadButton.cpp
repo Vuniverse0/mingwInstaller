@@ -125,11 +125,7 @@ void DownloadButton::startDownloading()
     curl_easy_setopt(http_handle, CURLOPT_PROGRESSFUNCTION, progress_func);
     curl_easy_setopt(http_handle, CURLOPT_NOPROGRESS, 0);
     /* open the file */
-#ifdef __linux__
     dataFile = fopen(Manager::tempPath(candidate.name).c_str(), "wb");
-#elif _WIN32
-    dataFile = fopen((Manager::tempPath() + "mingw.7z").c_str(), "wb");
-#endif
 
     if(dataFile) {
         curl_easy_setopt(http_handle, CURLOPT_WRITEFUNCTION, write_data);
