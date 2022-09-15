@@ -39,7 +39,7 @@ void page_7();  ///finish
 int main(int argc, char **argv) {
     Fl::scheme("gtk+");
 
-    G_win = new Fl_Window(800, 600, width, height, "Example Wizard");
+    G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
     Manager::manager.getInfo();
 

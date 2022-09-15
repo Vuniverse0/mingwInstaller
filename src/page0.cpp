@@ -11,9 +11,10 @@ namespace {
 
     void choice_callback(Fl_File_Chooser *obj, void *)
     {
-        if(obj->visible()) return;
+        if(fc->visible()) return;
         Manager::manager.installDir = obj->value();
         box->value(Manager::manager.installDir.c_str());
+        box->show();
         if(obj != fc)
             throw std::runtime_error("Aluminium epta, u vas callback ne tam");
         delete fc;
@@ -26,7 +27,8 @@ namespace {
             fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
             fc->callback(choice_callback);
             fc->show();
-        }
+        }else if(!fc->visible())
+            fc->show();
         //if(fc->visible()) w->callback(next_cb) ; else fc->show();
     }
 }
@@ -46,6 +48,7 @@ void page_0()
     set_dirr->callback(call_back_page_1);
 
     box = new Fl_Multiline_Output(100, 200, 500, 25,"Install in: ");
+    box->hide();
 
     Fl_Box *out = new Fl_Box(20, 100, 500, 25, "Select an install directory");
     out->labelsize(45);

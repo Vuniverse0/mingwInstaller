@@ -20,7 +20,7 @@ add_executable(mingwInstaller
         src/page5.cpp
         src/page6.cpp
         src/page7.cpp
-        
+
         src/lzma2201/C/Bcj2.c
         src/lzma2201/C/Bra.c
         src/lzma2201/C/Bra86.c

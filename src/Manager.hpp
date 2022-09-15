@@ -28,7 +28,7 @@ public:
             "Authorization: Bearer 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",
             "Accept: application/vnd.github+json"
     };
-    static std::string tempPath();
+    static std::string tempPath(const std::string& str);
 private:
     std::vector<BuildInfo> buffer;
     std::vector<std::string> versions{};

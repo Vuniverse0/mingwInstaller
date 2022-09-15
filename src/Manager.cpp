@@ -186,9 +186,9 @@ const BuildInfo &Manager::getCandidate()
     return *it;
 }
 
-std::string Manager::tempPath()
+std::string Manager::tempPath(const std::string& str)
 {
-    return (std::filesystem::temp_directory_path().string() + "/");
+    return (std::filesystem::temp_directory_path() / str).string();
 }
 
 extern "C"{ int seven_z(int numArgs, const char *args[]);}

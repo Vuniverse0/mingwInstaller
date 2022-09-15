@@ -1,10 +1,44 @@
 #include "DownloadButton.hpp"
 
+#include <cmath>
+
 #include "Manager.hpp"
 
 #include "Fl/Fl_File_Chooser.H"
 
 
+void progres(double);
+
+int progress_func(void* ptr, double TotalToDownload, double NowDownloaded,
+                  double TotalToUpload, double NowUploaded)
+{
+    // ensure that the file to be downloaded is not empty
+    // because that would cause a division by zero error later on
+    if (TotalToDownload <= 0.0) {
+        return 0;
+    }
+
+    double fractiondownloaded = NowDownloaded / TotalToDownload;
+    progres(fractiondownloaded);
+
+#ifdef CONSOLE
+    int totaldotz= 40;
+
+    int dotz = (int) round(fractiondownloaded * totaldotz);
+
+    int ii=0;
+    printf("%3.0f%% [",fractiondownloaded*100);
+    for ( ; ii < dotz;ii++) {
+        printf("=");
+    }
+    for ( ; ii < totaldotz;ii++) {
+        printf(" ");
+    }
+    printf("]\r");
+    fflush(stdout);
+#endif
+    return 0;
+}
 
 static void download_cb(Fl_Widget* button, void*)
 {
@@ -32,7 +66,6 @@ DownloadButton::DownloadButton(int x, int y, int w, int h, const char *label)
     Fl_Button::callback(download_cb);
 }
 
-
 void DownloadButton::Timer_CB(void *userdata)
 {
     auto *pb = (DownloadButton*)userdata;
@@ -40,29 +73,25 @@ void DownloadButton::Timer_CB(void *userdata)
     if ( pb->isDone == DownloadStatus::Process ) {
 
         CURLMcode mc = curl_multi_perform(pb->multi_handle, &(pb->still_running));
-
         if (!mc)
             /* wait for activity, timeout or "nothing" */
-            mc = curl_multi_poll(pb->multi_handle, NULL, 0, 10, NULL);
-
+            mc = curl_multi_poll(pb->multi_handle, NULL, 0, 10, 0);
         if ( !pb->still_running ) {
             if ( pb->isDone == DownloadStatus::Process )
                 pb->isDone = DownloadStatus::Done;
             pb->endDownloading();
             return;
+        }else{
+            Fl::repeat_timeout(1.0/60.0, Timer_CB, userdata);
         }
 
         if ( mc ) {
             fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
             pb->isDone = DownloadStatus::Error;
+            pb->endDownloading();
             return;
         }
-
-        Fl::repeat_timeout(1.0/60.0, Timer_CB, userdata);
-    }
-
-    if ( pb->isDone == DownloadStatus::Done ) {
-        pb->isDone = DownloadStatus::Empty;
+        ///Fl::repeat_timeout(1.0/60.0, Timer_CB, userdata);
     }
 }
 #include<iostream>
@@ -93,9 +122,11 @@ void DownloadButton::startDownloading()
 
     curl_easy_setopt(http_handle, CURLOPT_HEADERFUNCTION, header_callback);
 
+    curl_easy_setopt(http_handle, CURLOPT_PROGRESSFUNCTION, progress_func);
+    curl_easy_setopt(http_handle, CURLOPT_NOPROGRESS, 0);
     /* open the file */
 #ifdef __linux__
-    dataFile = fopen((Manager::tempPath() + candidate.name).c_str(), "wb");
+    dataFile = fopen(Manager::tempPath(candidate.name).c_str(), "wb");
 #elif _WIN32
     dataFile = fopen((Manager::tempPath() + "mingw.7z").c_str(), "wb");
 #endif
@@ -110,7 +141,8 @@ void DownloadButton::startDownloading()
 
     /* init a multi stack */
     multi_handle = curl_multi_init();
-
+///TODO remake choose page
+/// TODO write CURLOPT_PROGRESSFUNCTION for GUI
     /* add the individual transfers */
     curl_multi_add_handle(multi_handle, http_handle);
 
@@ -131,7 +163,7 @@ void DownloadButton::endDownloading()
     multi_handle = http_handle = dataFile = nullptr;
 
     if(isDone == DownloadStatus::Done) {
-        Manager::manager.unpack(Manager::tempPath() + Manager::manager.getCandidate().name);
+        Manager::manager.unpack(Manager::tempPath(Manager::manager.getCandidate().name));
         doneDownload();
     }else{
         still_running = 0;
