@@ -26,7 +26,7 @@ public:
 
     const std::vector<std::string>& getVersions();
     const std::vector<size_t>& getRevsForCandidate();
-    int unpack();
+    void unpack();
     const std::array<const std::string, 2> headers_strings
     {
             "Authorization: Bearer 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",

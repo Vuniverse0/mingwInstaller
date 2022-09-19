@@ -14,7 +14,7 @@ Manager Manager::manager{};
 
 extern "C" { int force_update(size_t, size_t); }
 
-extern "C"{ int seven_z(int(*)(size_t, size_t),int numArgs, const char *args[]);}
+extern "C"{ int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);}
 
 enum class Page6state{download, downloading, extract, extracting, done, error };
 void page6_set(Page6state state);
@@ -163,18 +163,15 @@ const BuildInfo &Manager::getCandidate()
     return *it;
 }
 
-int Manager::unpack()
+void Manager::unpack()
 {
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
-    if(seven_z(force_update, 3, args) == 0) {
-        status = Status::Done;
-        Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
-    }
-    else{
-        return 1;
-    }
+    if(seven_z(force_update, 3, args))///!=0
+        return ;
+    status = Status::Done;
+    Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 
 void Manager::Timer_CB(void *userdata) {
@@ -277,6 +274,7 @@ void Manager::downloading()
 }
 
 void Manager::downloadEnd() {
+    printf("Download Finished");
     fclose(dataFile);
 
     curl_multi_remove_handle(multi_handle, http_handle);
@@ -298,12 +296,7 @@ void Manager::downloadEnd() {
     ///TODO add cancel extract with rm of files
 }
 
-int Manager::extractCancel() const
-{
-    if(status == Status::Extracting)
-        return 0;
-    return 1;
-}
+int Manager::extractCancel() const { return status != Status::Extracting; }
 
 void Manager::extractEnd()
 {

@@ -37,8 +37,8 @@ void progressSet(float rate);
 
 extern "C" {
 int force_update(size_t now, size_t all) {
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
     Fl::wait(1.0/60.);
+    progressSet(static_cast<float>(now) / static_cast<float>(all));
     return Manager::manager.extractCancel();
 }
 }
