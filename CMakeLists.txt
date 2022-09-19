@@ -19,7 +19,6 @@ add_executable(mingwInstaller
         src/page4.cpp
         src/page5.cpp
         src/page6.cpp
-        src/page7.cpp
 
         src/lzma2201/C/Bcj2.c
         src/lzma2201/C/Bra.c
@@ -44,7 +43,6 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zFile.c
         src/lzma2201/C/7zStream.c
         )
-#TODO LZMA SDK DEV
 #7z -DNDEBUG  -lpthread -ldl
 
 add_link_options(-s)
