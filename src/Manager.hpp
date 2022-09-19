@@ -12,27 +12,55 @@ enum class Arcs;
 
 class Manager final {
     Manager() = default;
-    static BuildInfo parseName(const std::string& name);
 public:
     static Manager manager;
 
-    SelectInfo downloadCandidate{};
-    std::string installDir{"/tmp"};
-    const BuildInfo& getCandidate();
-    const std::vector<BuildInfo>& getInfo();
+    SelectInfo downloadCandidate{};///TODO set candidate?
+    std::string installDir{};///TODO set install dir
+    void download();
+    void downloadEnd();
+    void extract();
+    void extractEnd();
+    int extractCancel() const;
+    void cancel();
+
     const std::vector<std::string>& getVersions();
     const std::vector<size_t>& getRevsForCandidate();
-    int unpack(const std::string& arc) const;
+    int unpack();
     const std::array<const std::string, 2> headers_strings
     {
             "Authorization: Bearer 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",
             "Accept: application/vnd.github+json"
     };
-    static std::string tempPath(const std::string& str);
 private:
+    const BuildInfo& getCandidate();
+    const std::vector<BuildInfo>& getInfo();
+    static void fillBuffer(std::vector<BuildInfo>& buff, const std::string& data);
+    void sortVersions();
+    static BuildInfo parseName(const std::string& name);
+    static void Timer_CB(void *userdata);
+
+
     std::vector<BuildInfo> buffer;
     std::vector<std::string> versions{};
     std::vector<size_t> revs{};
+
+    void downloading();
+
+    void *http_handle = 0; //CURL
+    void *multi_handle = 0; //CURLM
+    FILE *dataFile = 0;
+    int still_running = 0;
+
+    enum class Status
+    {
+        Empty,
+        Downloading,
+        Downloaded,
+        Extracting,
+        Done,
+        Error
+    } status = Status::Empty;
 };
 
 

@@ -20,7 +20,7 @@ constexpr size_t button_height = 35;
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);
 void done_cb(Fl_Widget*, void*);
-void doneDownload();
+void downloadDone();
 
 enum class ExcRs{ sjlj, dwarf, seh, error};
 enum class MgRs{ win32, posix, error};

@@ -11,9 +11,8 @@ namespace {
     Fl_Wizard *G_wiz = 0;
 }
 
-
 void back_cb(Fl_Widget*,void*) { G_wiz->prev(); }
-void next_cb(Fl_Widget*,void*) { G_wiz->next(); }
+void next_cb(Fl_Widget*,void*) { G_wiz->next(); } ///while(1){force_update(0);  }} for tests
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
 ///welcome page  TODO
@@ -34,14 +33,21 @@ void page_5();  ///revision
 
 void page_6();  ///download
 
-void page_7();  ///finish
+void progressSet(float rate);
+
+extern "C" {
+int force_update(size_t now, size_t all) {
+    progressSet(static_cast<float>(now) / static_cast<float>(all));
+    Fl::wait(1.0/60.);
+    return Manager::manager.extractCancel();
+}
+}
 
 int main(int argc, char **argv) {
     Fl::scheme("gtk+");
 
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
-    Manager::manager.getInfo();
 
     page_();
     page_1();
@@ -51,7 +57,6 @@ int main(int argc, char **argv) {
     page_5();
     page_0();
     page_6();
-    page_7();
 
     G_wiz->end();
     G_win->end();

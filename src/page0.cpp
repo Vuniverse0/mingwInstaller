@@ -16,7 +16,7 @@ namespace {
         box->value(Manager::manager.installDir.c_str());
         box->show();
         if(obj != fc)
-            throw std::runtime_error("Aluminium epta, u vas callback ne tam");
+            throw std::runtime_error("Otval choice_callback page0(5.5) ");
         delete fc;
         fc = nullptr;
         next->show();

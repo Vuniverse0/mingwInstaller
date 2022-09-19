@@ -540,7 +540,7 @@ static void GetAttribString(UInt32 wa, BoolInt isDir, char *s)
 
 // #define NUM_PARENTS_MAX 128
 
-int MY_CDECL seven_z(int numargs, char *args[])
+int MY_CDECL seven_z(int(* force_update)(size_t, size_t), int numargs, char *args[])
 {
     ISzAlloc allocImp;
     ISzAlloc allocTempImp;
@@ -610,7 +610,7 @@ int MY_CDECL seven_z(int numargs, char *args[])
         {
             lookStream.bufSize = kInputBufSize;
             lookStream.realStream = &archiveStream.vt;
-            LookToRead2_Init(&lookStream);
+            LookToRead2_Init(&lookStream)
         }
     }
 
@@ -650,8 +650,11 @@ int MY_CDECL seven_z(int numargs, char *args[])
             Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
             size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
 
-            for (i = 0; i < db.NumFiles; i++)
+            for (i = 0; i < db.NumFiles; i++)//this
             {
+                int force = force_update(i, db.NumFiles);
+                if(force)
+                    return force;
                 size_t offset = 0;
                 size_t outSizeProcessed = 0;
                 // const CSzFileItem *f = db.Files + i;

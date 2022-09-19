@@ -3,23 +3,31 @@
 #include <filesystem>
 
 #include <curl/curl.h>
-#include <nlohmann/json.hpp> ///TODO remove json
-///TODO move download code from download button to manager
+#include <algorithm>
+#include "flatjson.hpp"
+#include <nlohmann/json.hpp>
+
+#include "curl_tools.hpp"
+
 
 Manager Manager::manager{};
 
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
+extern "C" { int force_update(size_t, size_t); }
 
-static size_t header_callback(char *buffer, size_t size,
-                              size_t nitems, void *userdata)
+extern "C"{ int seven_z(int(*)(size_t, size_t),int numArgs, const char *args[]);}
+
+enum class Page6state{download, downloading, extract, extracting, done, error };
+void page6_set(Page6state state);
+
+void progressSet(float);
+
+void auto_extract();
+
+int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
 {
-    /* received header is nitems * size long in 'buffer' NOT ZERO TERMINATED */
-    /* 'userdata' is set with CURLOPT_HEADERDATA */
-    return nitems * size;
+    if (TotalToDownload > 0.0)
+        progressSet(static_cast<float>(NowDownloaded / TotalToDownload));
+    return 0;
 }
 
 const std::vector<size_t>& Manager::getRevsForCandidate()
@@ -32,18 +40,16 @@ const std::vector<size_t>& Manager::getRevsForCandidate()
         });
         revs.push_back(it->revision);
     }while( it++ != end );
-    std::sort(revs.begin(), revs.end(),
-              [](auto a, auto b){return a > b;} );
+    std::sort(revs.begin(), revs.end(), std::greater{}); /// [](auto a, auto b){return a > b;} );
     return revs;
 }
 
 const std::vector<std::string>& Manager::getVersions()
 {
-    if ( versions.empty() )
-        throw std::runtime_error("Please call Manager::getInfo before");
+    if(versions.empty()) getInfo();
     return versions;
 }
-
+#include <iostream>
 const std::vector<BuildInfo>& Manager::getInfo()
 {
     if(buffer.empty()) {
@@ -68,44 +74,16 @@ const std::vector<BuildInfo>& Manager::getInfo()
 
         }
 
-        nlohmann::json data = nlohmann::json::parse(readBuffer);
-        for( auto& page : data )
-            for (auto &link: page.at("assets")) {
-                auto name = to_string(link.at("name"));
-                BuildInfo buildInfo;
-                buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
-                buildInfo = parseName(buildInfo.name);
-                buildInfo.download = to_string(link.at("browser_download_url"));
-                buildInfo.download = std::string(buildInfo.download.begin() + 1, buildInfo.download.end() - 1);
-                buffer.push_back( buildInfo );
-                if(std::find(versions.begin(), versions.end(), buildInfo.version) == versions.end())
-                    versions.push_back(buildInfo.version);
-            }
-        std::sort(versions.begin(), versions.end(),
-        [](auto& first, auto& second)->bool {
-            std::size_t fpos1{}, fpos2{};
-            std::size_t spos1{}, spos2{};
-            int f = stoi(first, &fpos1);
-            int s = stoi(second, &spos1);
-            if( f > s )
-                return true;
-            else if( f < s )
-                return false;
-            f = stoi(std::string(first.begin() + 1 + fpos1, first.end()), &fpos2);
-            s = stoi(std::string(second.begin() + 1 + spos1, second.end()), &spos2);
-            if( f > s )
-                return true;
-            else if( f < s )
-                return false;
-            f = stoi(std::string(first.begin() + 2 + fpos1 + fpos2, first.end()));
-            s = stoi(std::string(second.begin() + 2 + spos1 + spos2, second.end()));
-            if( f > s )
-                return true;
-            else if( f < s )
-                return false;
-            return false;
-            ///TODO rewrite versions, make version class and normal comparing
-        });
+        fillBuffer(buffer, readBuffer); ///Parse
+        /*
+        for(const auto& buildInfo : buffer)
+            if (std::find(versions.begin(), versions.end(), buildInfo.version) == versions.end())
+                versions.push_back(buildInfo.version);
+        */
+        versions.resize(buffer.size());
+        std::transform(buffer.begin(), buffer.end(), versions.begin(), [](auto& buildInfo){return buildInfo.version;});
+        versions.erase(std::unique(versions.begin(), versions.end()), versions.end());
+        sortVersions();
     }
     return buffer;
 }
@@ -156,23 +134,22 @@ BuildInfo Manager::parseName(const std::string& name)
                 break;
             default: break;
         }
-        tokenValue = strtok(NULL, "-");
+        tokenValue = strtok(nullptr, "-");
     }
     return buildInfo;
 }
 
 const BuildInfo &Manager::getCandidate()
 {
-    static BuildInfo* last_build;
+    static const BuildInfo* last_build;
     static SelectInfo last_info {0};
     if(!last_info.version || !(last_info == downloadCandidate))
         last_info = downloadCandidate;
     else
         return *last_build;
 
-    auto it = std::find_if(buffer.begin(), buffer.end(),
+    auto it = std::find_if(getInfo().begin(), getInfo().end(),
        [&](auto& member) -> bool {
-
             return
                member.version == versions[downloadCandidate.version]
             && member.revision == revs[downloadCandidate.revision]
@@ -180,33 +157,233 @@ const BuildInfo &Manager::getCandidate()
             && member.multithreading == downloadCandidate.multithreading
             && member.exception == downloadCandidate.exception;
         });
-    if(it == buffer.end())
+    if(it == getInfo().end())
         throw std::runtime_error("Can't find build");
     last_build = &(*it);
     return *it;
 }
 
-std::string Manager::tempPath(const std::string& str)
+int Manager::unpack()
 {
-    return (std::filesystem::temp_directory_path() / str).string();
+    std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
+    const char* args[4]{"seven_z", "x", file.c_str()};
+    std::filesystem::current_path(installDir);
+    if(seven_z(force_update, 3, args) == 0) {
+        status = Status::Done;
+        Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
+    }
+    else{
+        return 1;
+    }
 }
 
-extern "C"{ int seven_z(int numArgs, const char *args[]);}
+void Manager::Timer_CB(void *userdata) {
+    switch (manager.status) {
+        case Status::Empty:
+            break;
+        case Status::Downloading:
+            Manager::manager.downloading();
+            break;
+        case Status::Downloaded:
+            Manager::manager.downloadEnd();
+            break;
+        case Status::Extracting:
+            Manager::manager.unpack();
+            break;
+        case Status::Done:
+            Manager::manager.extractEnd();
+            break;
+        case Status::Error:
+            throw std::runtime_error("Error status in TimerCb");
+    }
+}
 
-//#include "LzmaEnc.h"
-//#include "LzmaDec.h"
-
-
-int Manager::unpack(const std::string &arc) const
+void Manager::download()
 {
-    /// target:: installDir
-    ///source:: arc
+    curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    ///) LzmaDec.h + LzmaDec.c + Types.h
-    const char* args[4]{"./7zdec", "x", arc.c_str()};
-    std::filesystem::current_path(installDir);
-    seven_z(3, args);
+    http_handle = curl_easy_init();
+    auto& candidate =  Manager::manager.getCandidate();
 
-    //lzma_auto_decoder()
-    return 0;
+    ///"Accept: application/vnd.github+json" \ создаешь терминал с прописаным пасем в мингв
+    /// распаковка в темп, распаковка куда выбор, Батник к бин заспускает в ней терминал
+    ///и добавить батник в винду lzma
+
+    if(!http_handle) throw std::runtime_error("Curl corrupted");
+
+    curl_easy_setopt(http_handle, CURLOPT_URL, candidate.download.c_str());
+    curl_easy_setopt(http_handle, CURLOPT_USERAGENT, "Anon");
+
+    curl_easy_setopt(http_handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(http_handle, CURLOPT_MAXREDIRS, 50L);
+    curl_easy_setopt(http_handle, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_2TLS);
+    curl_easy_setopt(http_handle, CURLOPT_FTP_SKIP_PASV_IP, 1L);
+    curl_easy_setopt(http_handle, CURLOPT_TCP_KEEPALIVE, 1L);
+
+    for(auto& header : Manager::manager.headers_strings)
+        curl_easy_setopt(http_handle, CURLOPT_HEADERDATA, &header);
+
+    curl_easy_setopt(http_handle, CURLOPT_HEADERFUNCTION, header_callback);
+
+    curl_easy_setopt(http_handle, CURLOPT_PROGRESSFUNCTION, progress_func);
+    curl_easy_setopt(http_handle, CURLOPT_NOPROGRESS, 0);
+    /* open the file */
+    std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
+    dataFile = fopen(file.c_str(), "wb");
+
+    if(dataFile) {
+        curl_easy_setopt(http_handle, CURLOPT_WRITEFUNCTION, write_data);
+        /* write the page body to this file handle */
+        curl_easy_setopt(http_handle, CURLOPT_WRITEDATA,  (void*)dataFile);
+    }else{
+        throw std::runtime_error("Can't create download file");
+    }
+
+    multi_handle = curl_multi_init();/// init a multi stack
+
+    curl_multi_add_handle(multi_handle, http_handle); ///add the individual transfers
+
+    still_running = 1;
+
+    status = Status::Downloading;
+
+    page6_set(Page6state::downloading);
+
+    Fl::repeat_timeout(1.0/60.0, Timer_CB);
+}
+
+void Manager::extract()
+{
+    status = Status::Extracting;
+    page6_set(Page6state::extracting);
+    Fl::repeat_timeout(1.0/60.0, Timer_CB);
+}
+
+void Manager::downloading()
+{
+    CURLMcode mc = curl_multi_perform(multi_handle, &(still_running));
+    if (!mc) /* wait for activity, timeout or "nothing" */
+        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, 0);
+    else{
+        fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
+        status = Status::Error;
+        downloadEnd();
+        return;
+    }
+    if ( !still_running )
+        status = Status::Downloaded;
+
+    Fl::repeat_timeout(1.0/60.0, Timer_CB);
+}
+
+void Manager::downloadEnd() {
+    fclose(dataFile);
+
+    curl_multi_remove_handle(multi_handle, http_handle);
+    curl_easy_cleanup(http_handle);
+    curl_multi_cleanup(multi_handle);
+    curl_global_cleanup();
+
+    still_running = 0;
+
+    multi_handle = http_handle = dataFile = nullptr;
+
+    page6_set(Page6state::download);
+
+    if(status == Status::Downloaded)
+        auto_extract();
+    else
+        status = Status::Empty;
+
+    ///TODO add cancel extract with rm of files
+}
+
+int Manager::extractCancel() const
+{
+    if(status == Status::Extracting)
+        return 0;
+    return 1;
+}
+
+void Manager::extractEnd()
+{
+    if(status == Status::Extracting) {
+        page6_set(Page6state::extract);
+        status = Status::Downloaded;
+    }else if(status == Status::Done)
+        page6_set(Page6state::done);
+    else
+        throw std::runtime_error("extractEnd: invalid status");
+}
+
+void Manager::cancel()
+{
+    if(status ==  Status::Downloaded)
+        downloadEnd();
+    else if(status == Status::Extracting)
+        extractEnd();
+    status = Status::Empty;
+}
+
+void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& readBuffer)
+{
+#if 0
+    flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
+    std::cout<<data.dump(4)<<std::endl;
+    assert(data.is_array());
+    for(const auto & page : data) {
+        assert(page.is_object());
+        auto page_json = page.at("assets");
+        assert(page_json.is_array());
+        for(const auto & link : page_json) {
+            assert(link.is_object());
+            BuildInfo buildInfo;
+            buildInfo.name = link.at("name").to_string();///std::string(name.begin() + 1, name.end() - 1);
+            buildInfo = parseName(buildInfo.name);
+            buildInfo.download = link.at("browser_download_url").to_string();
+            buffer.push_back(buildInfo);
+        }
+    }
+#else
+    nlohmann::json data = nlohmann::json::parse(readBuffer);
+        for( auto& page : data )
+            for (auto &link: page.at("assets")) {
+                auto name = to_string(link.at("name"));
+                BuildInfo buildInfo;
+                buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
+                buildInfo = parseName(buildInfo.name);
+                buildInfo.download = to_string(link.at("browser_download_url"));
+                buildInfo.download = std::string(buildInfo.download.begin() + 1, buildInfo.download.end() - 1);
+                buffer.push_back( buildInfo );
+            }
+#endif
+}
+
+void Manager::sortVersions()
+{
+    std::sort(versions.begin(), versions.end(),
+              [](auto& first, auto& second)->bool {
+                  std::size_t fpos1{}, fpos2{};
+                  std::size_t spos1{}, spos2{};
+                  int f = stoi(first, &fpos1);
+                  int s = stoi(second, &spos1);
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  f = stoi(std::string(first.begin() + 1 + fpos1, first.end()), &fpos2);
+                  s = stoi(std::string(second.begin() + 1 + spos1, second.end()), &spos2);
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  f = stoi(std::string(first.begin() + 2 + fpos1 + fpos2, first.end()));
+                  s = stoi(std::string(second.begin() + 2 + spos1 + spos2, second.end()));
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  return false;
+                  ///TODO rewrite versions, make version class and normal comparing
+              });
 }

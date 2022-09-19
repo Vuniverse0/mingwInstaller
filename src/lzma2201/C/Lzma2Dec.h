@@ -8,7 +8,7 @@
 
 EXTERN_C_BEGIN
 
-/* ---------- State Interface ---------- */
+/* ---------- Page6state Interface ---------- */
 
 typedef struct
 {
