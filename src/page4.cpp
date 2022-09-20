@@ -55,6 +55,11 @@ void page_4() {
     choice->value(0);
     choice->textsize(20);
     choice->callback((Fl_Callback *) choice_callback);
+
+    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* box_l = new Fl_Box( 0, 0, 50, 50);
+    box_l->image(logo);
+
     g->end();
 
 }

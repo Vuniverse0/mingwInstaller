@@ -47,6 +47,10 @@ void page_0()
     Fl_Button *set_dirr = new Fl_Button((180+290)/2, 150, 100, 25, "Chose");
     set_dirr->callback(call_back_page_1);
 
+    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* box_l = new Fl_Box( 0, 0, 50, 50);
+    box_l->image(logo);
+
     box = new Fl_Multiline_Output(100, 200, 500, 25,"Install in: ");
     box->hide();
 

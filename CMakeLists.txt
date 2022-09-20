@@ -42,12 +42,12 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zDec.c
         src/lzma2201/C/7zFile.c
         src/lzma2201/C/7zStream.c
-        )
+        src/logo.cpp)
 #7z -DNDEBUG  -lpthread -ldl
 
 add_link_options(-s)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE fltk curl nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE fltk curl fltk_images) #nlohmann_json::nlohmann_json )
        # ${PROJECT_SOURCE_DIR}/src/lzma2201/C/sevenz.a)
 
 #in linker option add -s

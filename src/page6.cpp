@@ -83,5 +83,9 @@ void page_6() {
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
+    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* box_l = new Fl_Box( 0, 0, 50, 50);
+    box_l->image(logo);
+
     g->end();
 }

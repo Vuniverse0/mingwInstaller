@@ -1,8 +1,9 @@
 #include "pages.hpp"
 #include <Fl/Fl_Text_Display.H>
 #include <Fl/Fl_Help_View.H>
-///hello page
 
+
+///hello page
 
 void page_()
 {
@@ -14,7 +15,11 @@ void page_()
     Fl_Button *back = new Fl_Button(180, 265, 100, 25, "Exit");
     back->callback(done_cb);
 
-    Fl_Help_View* text = new Fl_Help_View(20, 10, 600, 230);
+    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* box = new Fl_Box( 0, 0, 50, 50);
+    box->image(logo);
+
+    Fl_Help_View* text = new Fl_Help_View(50, 5, 600, 230);
     text->value(  "<h1>Welcome to Mingw install wizard</h1>"
 "<p>This installer was developed for Windows users of the MinGW-W64 compiler. "
 "<a href=\"https://www.mingw-w64.org/\">MinGW-W64</a> is a native Windows compiler based "

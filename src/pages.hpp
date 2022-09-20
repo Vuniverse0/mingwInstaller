@@ -11,6 +11,9 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
 #include <Fl/Fl_Choice.H>
+#include <Fl/Fl_PNG_Image.H>
+
+#include "logo.h"
 
 constexpr size_t width = 650;
 constexpr size_t height = 300;
