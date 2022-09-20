@@ -1,9 +1,13 @@
 #include "Manager.hpp"
 
 #include <filesystem>
+#include <algorithm>
 
 #include <curl/curl.h>
-#include <algorithm>
+
+#include <Fl/Fl_PNG_Image.H>
+
+#include "logo.h"
 
 #ifndef NLOHMANN_JSON
 #define FLAT_JSON
@@ -373,7 +377,6 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
 
         }
     }
-
 #endif
 
 #ifdef FLAT_JSON
@@ -437,3 +440,11 @@ void Manager::sortVersions()
                   ///TODO rewrite versions, make version class and normal comparing
               });
 }
+
+void Manager::logo()
+{
+    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* box_l = new Fl_Box( 0, 0, 312, 312);
+    box_l->image(logo);
+}
+

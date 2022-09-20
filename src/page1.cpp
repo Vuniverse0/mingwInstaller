@@ -19,23 +19,19 @@ void page_1()
 {
     Fl_Group *g = new Fl_Group(0, 0, width, height);
 
-    Fl_Button *next = new Fl_Button(290, 265, 100, 25, "Next @->");
+    Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
 
-    Fl_Button *back = new Fl_Button(180, 265, 100, 25, "@<- Back");
+    Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    Fl_Box *out = new Fl_Box(20, 100, 25, 25, "   Select a version");
+    Fl_Box *out = new Fl_Box(20+png_size, 100, 25, 25, "   Select a version");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    auto* box = new Fl_Box( 0, 0, 50, 50);
-    box->image(logo);
-
     const std::vector<std::string>& versions =  Manager::manager.getVersions();
 
-    choice = new Fl_Choice(200, 150, 15 * (12), 45);
+    choice = new Fl_Choice(200+png_size, 150, 15 * (12), 45);
 
     for(auto &version : versions)
         choice->add(version.c_str());
@@ -43,6 +39,8 @@ void page_1()
     choice->value(0);
     choice->textsize(20);
     choice->callback((Fl_Callback *) choice_callback);
+
+    Manager::logo();
 
     g->end();
 }

@@ -17,9 +17,9 @@ void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
 ///welcome page  TODO
 
-void page_();  ///version
+void page_();  ///hello
 
-void page_0();  ///version
+void page_0();  ///choose dir
 
 void page_1();  ///version
 
@@ -46,6 +46,7 @@ int force_update(size_t now, size_t all) {
 int main(int argc, char **argv) {
     Fl::scheme("gtk+");
 
+    //G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
 

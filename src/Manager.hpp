@@ -24,6 +24,8 @@ public:
     int extractCancel() const;
     void cancel();
 
+    static void logo();
+
     const std::vector<std::string>& getVersions();
     const std::vector<size_t>& getRevsForCandidate();
     void unpack();
@@ -40,7 +42,6 @@ private:
     static BuildInfo parseName(const std::string& name);
     static void Timer_CB(void *userdata);
 
-
     std::vector<BuildInfo> buffer;
     std::vector<std::string> versions{};
     std::vector<size_t> revs{};
@@ -52,15 +53,14 @@ private:
     FILE *dataFile = 0;
     int still_running = 0;
 
-    enum class Status
-    {
+    enum class Status{
         Empty,
         Downloading,
         Downloaded,
         Extracting,
         Done,
         Error
-    } status = Status::Empty;
+    } status;
 };
 
 

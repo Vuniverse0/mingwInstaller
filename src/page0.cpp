@@ -1,5 +1,7 @@
 #include "pages.hpp"
+
 #include "Manager.hpp"
+
 #include "Fl/Fl_File_Chooser.H"
 #include "Fl/Fl_Multiline_Output.H"
 
@@ -38,25 +40,23 @@ void page_0()
 {
     Fl_Group *g = new Fl_Group(0, 0, width, height);
 
-    next = new Fl_Button(290, 265, 100, 25, "Next @->");
+    next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
     next->hide();
-    Fl_Button *back = new Fl_Button(180, 265, 100, 25, "@<- Back");
+    Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    Fl_Button *set_dirr = new Fl_Button((180+290)/2, 150, 100, 25, "Chose");
+    Fl_Button *set_dirr = new Fl_Button((180+290)/2+png_size, 150, 100, 25, "Chose");
     set_dirr->callback(call_back_page_1);
 
-    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    auto* box_l = new Fl_Box( 0, 0, 50, 50);
-    box_l->image(logo);
-
-    box = new Fl_Multiline_Output(100, 200, 500, 25,"Install in: ");
+    box = new Fl_Multiline_Output(100+png_size, 200, 500, 25,"Install in: ");
     box->hide();
 
-    Fl_Box *out = new Fl_Box(20, 100, 500, 25, "Select an install directory");
+    Fl_Box *out = new Fl_Box(20+png_size, 100, 500, 25, "Select an install directory");
     out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+
+    Manager::logo();
 
     g->end();
 }

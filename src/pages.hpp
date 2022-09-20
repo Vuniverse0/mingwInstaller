@@ -11,14 +11,14 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
 #include <Fl/Fl_Choice.H>
-#include <Fl/Fl_PNG_Image.H>
 
-#include "logo.h"
-
-constexpr size_t width = 650;
-constexpr size_t height = 300;
-constexpr size_t button_width = 150;
-constexpr size_t button_height = 35;
+constexpr size_t width = 650 + 300;
+constexpr size_t height = 300 + 10;
+constexpr size_t png_size = 300;
+constexpr size_t button_width = 100;
+constexpr size_t button_height = 25;
+constexpr size_t button_x = 540;
+constexpr size_t button_y = 265;
 
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);

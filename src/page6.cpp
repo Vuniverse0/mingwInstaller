@@ -67,25 +67,23 @@ static void reset(Fl_Widget *button, void * d)
 }
 
 void page_6() {
-    auto *g = new Fl_Group(0, 0, 400, 300);
+    auto *g = new Fl_Group(0, 0, width, height);
 
-    download = new DownloadButton(290, 265, 100, 25, "Download");
-    back = new Fl_Button(180, 265, 100, 25, "@<- Back");
+    download = new DownloadButton(button_x+png_size, button_y, button_width, button_height, "Download");
+    back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
     back->callback(reset);
 
-    progress = new Fl_Progress((290+290)/2 - 250 , 200, 500, 25);
+    progress = new Fl_Progress((290+290)/2-250+png_size, 200, 500, 25);
     progress->maximum(1);
     progress->minimum(0);
     progress->hide();
     progress->value(0.f);
 
-    out = new Fl_Box(20, 100, 25, 25, "Download");
+    out = new Fl_Box(20+png_size, 100, 25, 25, "Download");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    auto* box_l = new Fl_Box( 0, 0, 50, 50);
-    box_l->image(logo);
+    Manager::logo();
 
     g->end();
 }

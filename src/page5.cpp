@@ -24,25 +24,23 @@ void page_5() {
     Fl_Group *g = new Fl_Group(0, 0, width, height);
     //Fl_Button *done = new Fl_Button(290, 265, 100, 25, "Finish");
     //done->callback(done_cb);
-    Fl_Button *next = new Fl_Button(290, 265, 100, 25, "Next @->");
+    Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
 
-    Fl_Button *back = new Fl_Button(180, 265, 100, 25, "@<- Back");
+    Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    Fl_Box *out = new Fl_Box(20, 100, 25, 25, "Select a build revision");
+    Fl_Box *out = new Fl_Box(20+png_size, 100, 25, 25, "Select a build revision");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    choice = new Fl_Choice(200, 150, 15 * 8, 45); //,"Select a version");
+    choice = new Fl_Choice(200+png_size, 150, 15 * 8, 45); //,"Select a version");
 
     update5();
     choice->textsize(20);
     choice->callback((Fl_Callback *) choice_callback);
 
-    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    auto* box_l = new Fl_Box( 0, 0, 50, 50);
-    box_l->image(logo);
+    Manager::logo();
 
     g->end();
 }
