@@ -1,6 +1,6 @@
 #include "pages.hpp"
-
-
+#include <Fl/Fl_Text_Display.H>
+#include <Fl/Fl_Help_View.H>
 ///hello page
 
 
@@ -14,9 +14,19 @@ void page_()
     Fl_Button *back = new Fl_Button(180, 265, 100, 25, "Exit");
     back->callback(done_cb);
 
-    Fl_Box *out = new Fl_Box(20, 100, 25, 25, "Hello");
-    out->labelsize(50);
-    out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+    Fl_Help_View* text = new Fl_Help_View(20, 10, 600, 230);
+    text->value(  "<h1>Welcome to Mingw install wizard</h1>"
+"<p>This installer was developed for Windows users of the MinGW-W64 compiler. "
+"<a href=\"https://www.mingw-w64.org/\">MinGW-W64</a> is a native Windows compiler based "
+"on the <a href=\"https://gcc.gnu.org/\">GNU C Compiler</a>. "
+"Unlike MSVC or Intel C++ or any other proprietary compilers,"
+"MinGW-W64 is an open source compiler which"
+"allows any user to be sure that the compiler generates only"
+"the machine code that is the result of compiling the source code "
+"written by the user, without any covertly generated machine code. "
+"This is especially important for applications that was designed"
+"to ensure the safety of a user in the information space.</p>");
+    text->textsize(15);
 
     g->end();
 }

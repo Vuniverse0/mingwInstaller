@@ -4,8 +4,23 @@
 
 #include <curl/curl.h>
 #include <algorithm>
+
+#ifndef NLOHMANN_JSON
+#define FLAT_JSON
+#endif
+
+#ifdef TEST_FLATJSON
+#define FLAT_JSON
+#define NLOHMANN_JSON
+#endif
+
+#ifdef FLAT_JSON
 #include "flatjson.hpp"
+#endif
+
+#ifdef NLOHMANN_JSON
 #include <nlohmann/json.hpp>
+#endif
 
 #include "curl_tools.hpp"
 
@@ -32,15 +47,13 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
 
 const std::vector<size_t>& Manager::getRevsForCandidate()
 {
-    auto it = buffer.begin(), end = buffer.end() ;
     revs.clear();
-    do{
-        it = std::find_if(it, end, [&](auto& member) -> bool {
-            return member.version == versions[downloadCandidate.version];
-        });
-        revs.push_back(it->revision);
-    }while( it++ != end );
-    std::sort(revs.begin(), revs.end(), std::greater{}); /// [](auto a, auto b){return a > b;} );
+    for(auto& it: buffer){
+        if(it.version == versions[downloadCandidate.version])
+            revs.push_back(it.revision);
+    }
+    revs.erase(std::unique(revs.begin(), revs.end()), revs.end());
+    std::sort(revs.begin(), revs.end(), std::greater()); ///[](auto a, auto b){return a > b;} );
     return revs;
 }
 
@@ -49,7 +62,7 @@ const std::vector<std::string>& Manager::getVersions()
     if(versions.empty()) getInfo();
     return versions;
 }
-#include <iostream>
+
 const std::vector<BuildInfo>& Manager::getInfo()
 {
     if(buffer.empty()) {
@@ -81,7 +94,7 @@ const std::vector<BuildInfo>& Manager::getInfo()
                 versions.push_back(buildInfo.version);
         */
         versions.resize(buffer.size());
-        std::transform(buffer.begin(), buffer.end(), versions.begin(), [](auto& buildInfo){return buildInfo.version;});
+        std::transform(buffer.cbegin(), buffer.cend(), versions.begin(), [](auto& buildInfo){return buildInfo.version;});
         versions.erase(std::unique(versions.begin(), versions.end()), versions.end());
         sortVersions();
     }
@@ -189,6 +202,7 @@ void Manager::Timer_CB(void *userdata) {
             break;
         case Status::Done:
             Manager::manager.extractEnd();
+            //system("mklink /d shortcut_name Target_file"); ///Here
             break;
         case Status::Error:
             throw std::runtime_error("Error status in TimerCb");
@@ -320,24 +334,67 @@ void Manager::cancel()
 
 void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& readBuffer)
 {
-#if 0
+#ifdef TEST_FLATJSON
+    #undef FLAT_JSON
+    #undef FLAT_JSON
+    BuildInfo nl_buildInfo;
+    nlohmann::json data = nlohmann::json::parse(readBuffer);
+        for( auto& page : data )
+            for (auto &link: page.at("assets")) {
+                auto name = to_string(link.at("name"));
+                nl_buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
+                nl_buildInfo = parseName(nl_buildInfo.name);
+                nl_buildInfo.download = to_string(link.at("browser_download_url"));
+                nl_buildInfo.download = std::string(nl_buildInfo.download.begin() + 1, nl_buildInfo.download.end() - 1);
+                ///buffer.push_back( nl_buildInfo );
+            }
+
     flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
-    std::cout<<data.dump(4)<<std::endl;
     assert(data.is_array());
-    for(const auto & page : data) {
-        assert(page.is_object());
-        auto page_json = page.at("assets");
+    for(std::size_t size_d = data.size(), i = 0; i<size_d; ++i) {
+        auto page_json = data.at(i).at("assets");
         assert(page_json.is_array());
-        for(const auto & link : page_json) {
-            assert(link.is_object());
+        for(std::size_t size_p = page_json.size(), j = 0; j<size_p; ++j) {
+            //assert(itp->is_object());
+            auto link = page_json.at(j);
             BuildInfo buildInfo;
             buildInfo.name = link.at("name").to_string();///std::string(name.begin() + 1, name.end() - 1);
             buildInfo = parseName(buildInfo.name);
             buildInfo.download = link.at("browser_download_url").to_string();
             buffer.push_back(buildInfo);
+
+            assert(buildInfo.name == nl_buildInfo.name);
+            assert(buildInfo.revision == nl_buildInfo.revision);
+            assert(buildInfo.architecture == nl_buildInfo.architecture);
+            assert(buildInfo.exception == nl_buildInfo.exception);
+            assert(buildInfo.multithreading == nl_buildInfo.multithreading);
+            assert(buildInfo.version == nl_buildInfo.version);
+            assert(buildInfo.download == nl_buildInfo.download);
+
         }
     }
-#else
+
+#endif
+
+#ifdef FLAT_JSON
+    flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
+    assert(data.is_array());
+    for(std::size_t size_d = data.size(), i = 0; i < size_d; ++i) {
+        auto page_json = data.at(i).at("assets");
+        assert(page_json.is_array());
+        for(std::size_t size_p = page_json.size(), j = 0; j < size_p; ++j) {
+            auto link = page_json.at(j);
+            BuildInfo buildInfo;
+            buildInfo.name = link.at("name").to_string();///std::string(name.begin() + 1, name.end() - 1);
+            buildInfo = parseName(buildInfo.name);
+            buildInfo.download = link.at("browser_download_url").to_string();
+
+            buffer.push_back(buildInfo);
+        }
+    }
+#endif
+
+#ifdef NLOHMANN_JSON
     nlohmann::json data = nlohmann::json::parse(readBuffer);
         for( auto& page : data )
             for (auto &link: page.at("assets")) {
