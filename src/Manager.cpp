@@ -9,6 +9,7 @@
 
 #include "curl_tools.hpp"
 #include "logo.h"
+#include "icon.h"
 #include "link.h"
 
 #ifndef NLOHMANN_JSON
@@ -327,7 +328,7 @@ void Manager::extractEnd()
         page6_set(Page6state::done);
         createBat();
         createIcon();
-        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url", installDir+"mingw32/icon.png");
+        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url", installDir+"mingw32/icon.ico");
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
@@ -458,8 +459,8 @@ Fl_RGB_Image* Manager::logo(bool box)
 
 void Manager::createIcon() const
 {
-    FILE *file = fopen("mingw32/icon.png", "wb");
-    fwrite(logo_png, 1, logo_png_len, file);
+    FILE *file = fopen("mingw32/icon.ico", "wb");
+    fwrite(icon, 1, icon_len, file);
     fclose(file);
 }
 

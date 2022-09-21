@@ -15,8 +15,6 @@ void back_cb(Fl_Widget*,void*) { G_wiz->prev(); }
 void next_cb(Fl_Widget*,void*) { G_wiz->next(); } ///while(1){force_update(0);  }} for tests
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
-///welcome page  TODO
-
 void page_();  ///hello
 
 void page_0();  ///choose dir
