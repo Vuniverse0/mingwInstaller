@@ -182,6 +182,7 @@ const BuildInfo &Manager::getCandidate()
 
 void Manager::unpack()
 {
+    ///TODO remove all in folder of exist and remove if cancel
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
@@ -325,7 +326,7 @@ void Manager::extractEnd()
     }else if(status == Status::Done) {
         page6_set(Page6state::done);
         createBat();
-        link(installDir + "mingw32/mingw.bat)", installDir, "Description1488");
+        link(installDir + "mingw32/mingw.bat", installDir, "Description1488");
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
