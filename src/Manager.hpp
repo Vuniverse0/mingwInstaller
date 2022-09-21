@@ -26,7 +26,7 @@ public:
     void createBat() const;
     void createIcon() const;
 
-    static Fl_Image* logo(bool box = true);
+    static Fl_RGB_Image* logo(bool box = true);
 
     const std::vector<std::string>& getVersions();
     const std::vector<size_t>& getRevsForCandidate();

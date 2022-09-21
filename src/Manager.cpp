@@ -446,7 +446,7 @@ void Manager::sortVersions()
               });
 }
 
-Fl_Image* Manager::logo(bool box)
+Fl_RGB_Image* Manager::logo(bool box)
 {
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
     if(box) {

@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
     //G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
+    G_win->icon(Manager::logo(false));
 
     page_();
     page_1();
