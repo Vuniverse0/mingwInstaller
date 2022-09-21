@@ -24,6 +24,7 @@ public:
     int extractCancel() const;
     void cancel();
     void createBat() const;
+    void createIcon() const;
 
     static void logo();
 

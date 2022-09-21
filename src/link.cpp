@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <stdio.h>
 
-BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcutName)
+BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcutName, const char *icon)
 {
     BOOL Res = TRUE;
     FILE *fp;
@@ -21,18 +21,18 @@ BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcut
     Res &= WritePrivateProfileString("InternetShortcut",
                "IconIndex", "0", ptchShortcutName);
     Res &= WritePrivateProfileString("InternetShortcut",
-               "IconFile", ptchExecutableFileName, ptchShortcutName);
+               "IconFile", icon, ptchShortcutName);
 
     return Res;
 }
 
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName)
+void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon))
 {
-    CreateShortcut(ptchExecutableFileName.c_str(), ptchShortcutName.c_str());
+    CreateShortcut(ptchExecutableFileName.c_str(), ptchShortcutName.c_str(), icon.c_str());
 }
 
 #else
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName)
+void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon)
 {
     printf("Wanna to create shortcut for:  %s, named:  %s", ptchExecutableFileName.c_str(), ptchShortcutName.c_str());
 }

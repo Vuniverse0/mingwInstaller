@@ -3,6 +3,6 @@
 
 #include <string>
 
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName);
+void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon);
 
 #endif //MINGWINSTALLER_LINK_H

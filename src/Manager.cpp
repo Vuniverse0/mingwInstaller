@@ -326,7 +326,8 @@ void Manager::extractEnd()
     }else if(status == Status::Done) {
         page6_set(Page6state::done);
         createBat();
-        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url");
+        createIcon();
+        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url", installDir+"mingw32/icon.png");
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
@@ -450,6 +451,13 @@ void Manager::logo()
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
     auto* box_l = new Fl_Box( 0, 0, 312, 312);
     box_l->image(logo);
+}
+
+void Manager::createIcon() const
+{
+    FILE *file = fopen("mingw32/icon.png", "wb");
+    fwrite(logo_png, 1, logo_png_len, file);
+    fclose(file);
 }
 
 void Manager::createBat() const
