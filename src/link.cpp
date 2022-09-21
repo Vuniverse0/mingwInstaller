@@ -54,6 +54,5 @@ void link(const std::string& lpszPathObj, const std::string& lpszPathLink, const
 #else
 void link(const std::string& lpszPathObj, const std::string& lpszPathLink, const std::string& lpszDesc)
 {
-
 }
 #endif

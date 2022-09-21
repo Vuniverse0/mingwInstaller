@@ -25,10 +25,10 @@ void page_()
 "to ensure the safety of a user in the information space.</p>");
     text->textsize(15);
 
-    Fl_Button *next = new Fl_Button(button_x+png_size, 280, button_width, button_height, "Next @->");
+    Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
 
-    Fl_Help_View* about = new Fl_Help_View(png_size+50, 280, button_width, button_height);
+    Fl_Help_View* about = new Fl_Help_View(png_size+50, button_y, button_width, button_height);
     about->value("<a href=\"https://gcc.gnu.org/\">About</a>");
     about->scrollbar_size(1);
     about->textsize(15);

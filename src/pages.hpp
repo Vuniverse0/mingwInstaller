@@ -18,7 +18,7 @@ constexpr size_t png_size = 300;
 constexpr size_t button_width = 100;
 constexpr size_t button_height = 25;
 constexpr size_t button_x = 540;
-constexpr size_t button_y = 265;
+constexpr size_t button_y = 280;
 
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);
