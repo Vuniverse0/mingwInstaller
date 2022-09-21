@@ -45,10 +45,11 @@ static HRESULT CreateLink(LPCWSTR lpszPathObj, LPCSTR lpszPathLink, LPCWSTR lpsz
 
 void link(const std::string& lpszPathObj, const std::string& lpszPathLink, const std::string& lpszDesc)
 {
-    std::wstring stemp1 = std::wstring(lpszPathObj.begin(), lpszPathObj.end());
-    std::wstring stemp2 = std::wstring(lpszPathLink.begin(), lpszPathLink.end());
-    std::wstring stemp3 = std::wstring(lpszDesc.begin(), lpszDesc.end());
-    CreateLink(stemp1.c_str(), stemp2.c_str(), stemp3.c_str());
+    //std::wstring stemp1 = std::wstring(lpszPathObj.begin(), lpszPathObj.end());
+    //std::wstring stemp2 = std::wstring(lpszPathLink.begin(), lpszPathLink.end());
+    //std::wstring stemp3 = std::wstring(lpszDesc.begin(), lpszDesc.end());
+    //CreateLink(stemp1.c_str(), stemp2.c_str(), stemp3.c_str());
+    CreateLink(lpszPathObj.c_str(), lpszPathLink.c_str(), lpszDesc.c_str());
 }
 #else
 void link(const std::string& lpszPathObj, const std::string& lpszPathLink, const std::string& lpszDesc)
