@@ -23,7 +23,6 @@ constexpr size_t button_y = 265;
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);
 void done_cb(Fl_Widget*, void*);
-void downloadDone();
 
 enum class ExcRs{ sjlj, dwarf, seh, error};
 enum class MgRs{ win32, posix, error};

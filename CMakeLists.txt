@@ -42,7 +42,7 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zDec.c
         src/lzma2201/C/7zFile.c
         src/lzma2201/C/7zStream.c
-        src/logo.cpp)
+        src/logo.cpp src/link.cpp)
 #7z -DNDEBUG  -lpthread -ldl
 
 add_link_options(-s)

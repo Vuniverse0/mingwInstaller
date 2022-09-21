@@ -23,6 +23,7 @@ public:
     void extractEnd();
     int extractCancel() const;
     void cancel();
+    void createBat() const;
 
     static void logo();
 

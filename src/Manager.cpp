@@ -7,7 +7,9 @@
 
 #include <Fl/Fl_PNG_Image.H>
 
+#include "curl_tools.hpp"
 #include "logo.h"
+#include "link.h"
 
 #ifndef NLOHMANN_JSON
 #define FLAT_JSON
@@ -25,8 +27,6 @@
 #ifdef NLOHMANN_JSON
 #include <nlohmann/json.hpp>
 #endif
-
-#include "curl_tools.hpp"
 
 
 Manager Manager::manager{};
@@ -206,7 +206,7 @@ void Manager::Timer_CB(void *userdata) {
             break;
         case Status::Done:
             Manager::manager.extractEnd();
-            //system("mklink /d shortcut_name Target_file"); ///Here
+            //system("mklink /d shortcut_name Target_file"); ///Here need to create bat file
             break;
         case Status::Error:
             throw std::runtime_error("Error status in TimerCb");
@@ -321,9 +321,11 @@ void Manager::extractEnd()
     if(status == Status::Extracting) {
         page6_set(Page6state::extract);
         status = Status::Downloaded;
-    }else if(status == Status::Done)
+    }else if(status == Status::Done) {
         page6_set(Page6state::done);
-    else
+        createBat();
+        link(installDir + "mingw32/mingw.bat)", installDir, "Description1488");
+    }else
         throw std::runtime_error("extractEnd: invalid status");
 }
 
@@ -446,5 +448,15 @@ void Manager::logo()
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
     auto* box_l = new Fl_Box( 0, 0, 312, 312);
     box_l->image(logo);
+}
+
+void Manager::createBat() const
+{
+    FILE *file = fopen("mingw32/mingw.bat", "wb");
+    std::string bat = "@echo off\n"
+                      "set PATH=" + installDir + "mingw32/bin/;%PATH%\n"
+                      "%windir%\\system32\\cmd.exe";
+    fwrite(bat.c_str(), 1, bat.size(), file);
+    fclose(file);
 }
 
