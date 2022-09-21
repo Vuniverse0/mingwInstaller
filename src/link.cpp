@@ -11,6 +11,7 @@
 
 
 static HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszPathLink, LPCSTR lpszDesc) {
+#if 0
     HRESULT hres;
     IShellLink *psl;
 
@@ -41,6 +42,37 @@ static HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszPathLink, LPCSTR lpszDe
         psl->Release();
     }
     return hres;
+#endif
+    CoInitialize(NULL);
+    IShellLink* pShellLink = NULL;
+    HRESULT hres;
+    hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_ALL,
+                   IID_IShellLink, (void**)&pShellLink);
+    if (SUCCEEDED(hres))
+    {
+        pShellLink->SetPath(lpszPathObj);  // Path to the object we are referring to
+        pShellLink->SetDescription(lpszDesc);
+        ///pShellLink->SetIconLocation(, 0);
+
+        IPersistFile *pPersistFile;
+        hres = pShellLink->QueryInterface(IID_IPersistFile, (void**)&pPersistFile);
+
+        if (SUCCEEDED(hres))
+        {
+            hres = pPersistFile->Save(lpszPathLink, TRUE);
+
+            pPersistFile->Release();
+        }
+        else
+        {
+            return 2;
+        }
+        pShellLink->Release();
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 void link(const std::string& lpszPathObj, const std::string& lpszPathLink, const std::string& lpszDesc)
