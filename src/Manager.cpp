@@ -326,7 +326,7 @@ void Manager::extractEnd()
     }else if(status == Status::Done) {
         page6_set(Page6state::done);
         createBat();
-        link(installDir + "mingw32/mingw.bat", installDir+"Mingw");
+        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url");
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
