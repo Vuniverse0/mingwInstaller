@@ -185,6 +185,7 @@ void Manager::unpack()
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
+    Fl::remove_timeout(Timer_CB);
     if(seven_z(force_update, 3, args))///!=0
         return ;
     status = Status::Done;
