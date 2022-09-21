@@ -10,7 +10,7 @@
 #include "shlguid.h"
 
 
-static HRESULT CreateLink(LPCWSTR lpszPathObj, LPCSTR lpszPathLink, LPCWSTR lpszDesc) {
+static HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszPathLink, LPCSTR lpszDesc) {
     HRESULT hres;
     IShellLink *psl;
 
