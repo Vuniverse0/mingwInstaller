@@ -446,11 +446,14 @@ void Manager::sortVersions()
               });
 }
 
-void Manager::logo()
+Fl_Image* Manager::logo(bool box)
 {
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    auto* box_l = new Fl_Box( 0, 0, 312, 312);
-    box_l->image(logo);
+    if(box) {
+        auto *box_l = new Fl_Box(0, 0, 312, 312);
+        box_l->image(logo);
+    }
+    return logo;
 }
 
 void Manager::createIcon() const

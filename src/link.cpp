@@ -26,7 +26,7 @@ BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcut
     return Res;
 }
 
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon))
+void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon)
 {
     CreateShortcut(ptchExecutableFileName.c_str(), ptchShortcutName.c_str(), icon.c_str());
 }
