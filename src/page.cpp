@@ -29,7 +29,7 @@ void page_()
     next->callback(next_cb);
 
     Fl_Help_View* about = new Fl_Help_View(png_size+50, button_y, button_width, button_height);
-    about->value("<a href=\"https://gcc.gnu.org/\">About</a>");
+    about->value("<a href=\"https://github.com/Vuniverse0/mingwInstaller/\">About</a>");
     about->scrollbar_size(1);
     about->textsize(15);
 

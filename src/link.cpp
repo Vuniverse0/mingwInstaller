@@ -34,6 +34,6 @@ void link(const std::string& ptchExecutableFileName, const std::string& ptchShor
 #else
 void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName)
 {
-
+    printf("Wanna to create shortcut for:  %s, named:  %s", ptchExecutableFileName.c_str(), ptchShortcutName.c_str());
 }
 #endif
