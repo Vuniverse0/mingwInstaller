@@ -184,11 +184,11 @@ void Manager::unpack()
     std::filesystem::current_path(installDir);
     std::filesystem::path mingw(std::filesystem::current_path()/"mingw32");
     if(exists(mingw))
-        directory_delete(mingw.c_str());
+        directory_delete("mingw32");
     Fl::remove_timeout(Timer_CB);
     if(seven_z(force_update, 3, args)){
         if(exists(mingw))
-            directory_delete(mingw.c_str());
+            directory_delete("mingw32");
         return ;
     }
     status = Status::Done;
