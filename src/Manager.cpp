@@ -187,9 +187,15 @@ void Manager::unpack()
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
+    std::filesystem::path mingw("mingw32");
+    if(exists(mingw))
+        remove_all(mingw);
     Fl::remove_timeout(Timer_CB);
-    if(seven_z(force_update, 3, args))///!=0
+    if(seven_z(force_update, 3, args)){
+        if(exists(mingw))
+            remove_all(mingw);
         return ;
+    }
     status = Status::Done;
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
