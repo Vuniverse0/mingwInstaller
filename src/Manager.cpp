@@ -93,11 +93,7 @@ const std::vector<BuildInfo>& Manager::getInfo()
         }
 
         fillBuffer(buffer, readBuffer); ///Parse
-        /*
-        for(const auto& buildInfo : buffer)
-            if (std::find(versions.begin(), versions.end(), buildInfo.version) == versions.end())
-                versions.push_back(buildInfo.version);
-        */
+
         versions.resize(buffer.size());
         std::transform(buffer.cbegin(), buffer.cend(), versions.begin(), [](auto& buildInfo){return buildInfo.version;});
         versions.erase(std::unique(versions.begin(), versions.end()), versions.end());
@@ -183,7 +179,6 @@ const BuildInfo &Manager::getCandidate()
 
 void Manager::unpack()
 {
-    ///TODO remove all in folder of exist and remove if cancel
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
@@ -215,7 +210,6 @@ void Manager::Timer_CB(void *userdata) {
             break;
         case Status::Done:
             Manager::manager.extractEnd();
-            //system("mklink /d shortcut_name Target_file"); ///Here need to create bat file
             break;
         case Status::Error:
             throw std::runtime_error("Error status in TimerCb");
@@ -228,10 +222,6 @@ void Manager::download()
 
     http_handle = curl_easy_init();
     auto& candidate =  Manager::manager.getCandidate();
-
-    ///"Accept: application/vnd.github+json" \ создаешь терминал с прописаным пасем в мингв
-    /// распаковка в темп, распаковка куда выбор, Батник к бин заспускает в ней терминал
-    ///и добавить батник в винду lzma
 
     if(!http_handle) throw std::runtime_error("Curl corrupted");
 
@@ -248,9 +238,9 @@ void Manager::download()
         curl_easy_setopt(http_handle, CURLOPT_HEADERDATA, &header);
 
     curl_easy_setopt(http_handle, CURLOPT_HEADERFUNCTION, header_callback);
-
     curl_easy_setopt(http_handle, CURLOPT_PROGRESSFUNCTION, progress_func);
     curl_easy_setopt(http_handle, CURLOPT_NOPROGRESS, 0);
+
     /* open the file */
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     dataFile = fopen(file.c_str(), "wb");
@@ -301,7 +291,6 @@ void Manager::downloading()
 }
 
 void Manager::downloadEnd() {
-    printf("Download Finished");
     fclose(dataFile);
 
     curl_multi_remove_handle(multi_handle, http_handle);
@@ -315,12 +304,13 @@ void Manager::downloadEnd() {
 
     page6_set(Page6state::download);
 
-    if(status == Status::Downloaded)
+    if(status == Status::Downloaded){
         auto_extract();
-    else
+        printf("Download Finished");
+    }else{
         status = Status::Empty;
-
-    ///TODO add cancel extract with rm of files
+        printf("Download Canceled");
+    }
 }
 
 int Manager::extractCancel() const { return status != Status::Extracting; }
@@ -332,9 +322,7 @@ void Manager::extractEnd()
         status = Status::Downloaded;
     }else if(status == Status::Done) {
         page6_set(Page6state::done);
-        createBat();
-        createIcon();
-        link(installDir + "mingw32/mingw.bat", installDir+"Mingw.url", installDir+"mingw32/icon.ico");
+        link(installDir + createBat(), installDir + "Mingw.url", installDir + createIcon());
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
@@ -353,20 +341,22 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
 #ifdef TEST_FLATJSON
     #undef FLAT_JSON
     #undef FLAT_JSON
-    BuildInfo nl_buildInfo;
+    std::vector<BuildInfo> test_buffer;
     nlohmann::json data = nlohmann::json::parse(readBuffer);
         for( auto& page : data )
             for (auto &link: page.at("assets")) {
                 auto name = to_string(link.at("name"));
+                BuildInfo nl_buildInfo;
                 nl_buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
                 nl_buildInfo = parseName(nl_buildInfo.name);
                 nl_buildInfo.download = to_string(link.at("browser_download_url"));
                 nl_buildInfo.download = std::string(nl_buildInfo.download.begin() + 1, nl_buildInfo.download.end() - 1);
-                ///buffer.push_back( nl_buildInfo );
+                test_buffer.push_back( nl_buildInfo );
             }
 
     flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
     assert(data.is_array());
+    auto it = test_buffer.begin();
     for(std::size_t size_d = data.size(), i = 0; i<size_d; ++i) {
         auto page_json = data.at(i).at("assets");
         assert(page_json.is_array());
@@ -374,19 +364,19 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
             //assert(itp->is_object());
             auto link = page_json.at(j);
             BuildInfo buildInfo;
-            buildInfo.name = link.at("name").to_string();///std::string(name.begin() + 1, name.end() - 1);
+            buildInfo.name = link.at("name").to_string();
             buildInfo = parseName(buildInfo.name);
             buildInfo.download = link.at("browser_download_url").to_string();
             buffer.push_back(buildInfo);
 
-            assert(buildInfo.name == nl_buildInfo.name);
-            assert(buildInfo.revision == nl_buildInfo.revision);
-            assert(buildInfo.architecture == nl_buildInfo.architecture);
-            assert(buildInfo.exception == nl_buildInfo.exception);
-            assert(buildInfo.multithreading == nl_buildInfo.multithreading);
-            assert(buildInfo.version == nl_buildInfo.version);
-            assert(buildInfo.download == nl_buildInfo.download);
-
+            assert(buildInfo.name == it->name);
+            assert(buildInfo.revision == it->revision);
+            assert(buildInfo.architecture == it->architecture);
+            assert(buildInfo.exception == it->exception);
+            assert(buildInfo.multithreading == it->multithreading);
+            assert(buildInfo.version == it->version);
+            assert(buildInfo.download == it->download);
+            ++it;
         }
     }
 #endif
@@ -400,10 +390,9 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
         for(std::size_t size_p = page_json.size(), j = 0; j < size_p; ++j) {
             auto link = page_json.at(j);
             BuildInfo buildInfo;
-            buildInfo.name = link.at("name").to_string();///std::string(name.begin() + 1, name.end() - 1);
+            buildInfo.name = link.at("name").to_string();
             buildInfo = parseName(buildInfo.name);
             buildInfo.download = link.at("browser_download_url").to_string();
-
             buffer.push_back(buildInfo);
         }
     }
@@ -463,20 +452,24 @@ Fl_RGB_Image* Manager::logo(bool box)
     return logo;
 }
 
-void Manager::createIcon() const
+const char* Manager::createIcon()
 {
-    FILE *file = fopen("mingw32/icon.ico", "wb");
+    std::string_view file_name = "mingw32/icon.ico\0";
+    FILE *file = fopen(file_name.data(), "wb");
     fwrite(icon, 1, icon_len, file);
     fclose(file);
+    return file_name.data();
 }
 
-void Manager::createBat() const
+const char*  Manager::createBat()
 {
-    FILE *file = fopen("mingw32/mingw.bat", "wb");
+    std::string_view file_name = "mingw32/mingw.bat\0";
+    FILE *file = fopen(file_name.data(), "wb");
     std::string bat = "@echo off\n"
-                      "set PATH=" + installDir + "mingw32/bin/;%PATH%\n"
+                      "set PATH=" + Manager::manager.installDir + "mingw32/bin/;%PATH%\n"
                       "%windir%\\system32\\cmd.exe";
     fwrite(bat.c_str(), 1, bat.size(), file);
     fclose(file);
+    return file_name.data();
 }
 

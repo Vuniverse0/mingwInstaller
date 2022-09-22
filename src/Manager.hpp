@@ -11,7 +11,7 @@ enum class MgRs;
 enum class Arcs;
 
 class Manager final {
-    Manager() = default;
+    explicit Manager() = default;
 public:
     static Manager manager;
 
@@ -23,8 +23,7 @@ public:
     void extractEnd();
     int extractCancel() const;
     void cancel();
-    void createBat() const;
-    void createIcon() const;
+
 
     static Fl_RGB_Image* logo(bool box = true);
 
@@ -50,9 +49,12 @@ private:
 
     void downloading();
 
-    void *http_handle = 0; //CURL
-    void *multi_handle = 0; //CURLM
-    FILE *dataFile = 0;
+    [[nodiscard]] static const char* createBat();
+    [[nodiscard]] static const char* createIcon() ;
+
+    void *http_handle = nullptr, //CURL
+    *multi_handle = nullptr; //CURLM
+    FILE *dataFile = nullptr;
     int still_running = 0;
 
     enum class Status{
@@ -62,7 +64,7 @@ private:
         Extracting,
         Done,
         Error
-    } status;
+    } status = Status::Empty;
 };
 
 
