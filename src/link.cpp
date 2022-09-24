@@ -120,26 +120,24 @@ double directory_delete(const char* pathname)
     {
         return 0;
     }
-    }
-    void showError(const char* error)
-    {
-         int msgboxID = MessageBox(
+}
+void showError(const char* error)
+{
+     int msgboxID = MessageBox(
+    NULL,
+    "Check internet conection. Details?",
+    "Problem",
+    MB_YESNO
+    );
+    if(msgboxID == IDYES){
+        MessageBox(
         NULL,
-        "Check internet conection. Details?",
+        error,
         "Problem",
-        MB_YESNO
+        MB_OK
         );
-        if(msgboxID == IDYES){
-            MessageBox(
-            NULL,
-            error,
-            "Problem",
-            MB_OK
-            );
-        }
     }
 }
-
 #else
 void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon)
 {
