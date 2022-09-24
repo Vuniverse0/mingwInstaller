@@ -45,7 +45,7 @@ add_executable(mingwInstaller
         src/logo.cpp src/link.cpp src/icon.cpp src/page_about.cpp)
 #7z -DNDEBUG  -lpthread -ldl
 
-add_link_options(-s)
+add_link_options(-s -static)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fltk curl fltk_images) #nlohmann_json::nlohmann_json )
        # ${PROJECT_SOURCE_DIR}/src/lzma2201/C/sevenz.a)
