@@ -31,6 +31,7 @@ void page_()
     Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
 
+
     Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, 280, button_width, button_height, "Exit");
     back->callback(done_cb);
 
