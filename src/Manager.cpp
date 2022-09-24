@@ -78,19 +78,26 @@ const std::vector<BuildInfo>& Manager::getInfo()
         curl = curl_easy_init();
 
         if(curl) {
+#ifndef NDEBUG
+	        curl_easy_setopt(curl , CURLOPT_VERBOSE, 1L);
+#endif
+	        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/niXman/mingw-builds-binaries/releases");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             curl_easy_setopt(curl, CURLOPT_USERAGENT, "Anon");
-
+	        char error[CURL_ERROR_SIZE]; /* needs to be at least this big */ //a
+	        curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error);//a
             for (auto &header: headers_strings)
                 curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header);
-
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             res = curl_easy_perform(curl);
             curl_easy_cleanup(curl);
-
-        }
+	        if(res)
+                showError(error);
+        }else
+            throw std::runtime_error("curl in init error");
+	    if(readBuffer.empty())
+	        throw std::runtime_error("curl after init error");
 
         fillBuffer(buffer, readBuffer); ///Parse
 

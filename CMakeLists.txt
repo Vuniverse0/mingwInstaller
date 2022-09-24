@@ -43,11 +43,12 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zFile.c
         src/lzma2201/C/7zStream.c
         src/logo.cpp src/link.cpp src/icon.cpp src/page_about.cpp)
-#7z -DNDEBUG  -lpthread -ldl
 
-add_link_options(-s -static)
+target_link_libraries(${PROJECT_NAME} PRIVATE fltk fltk_images curl)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE fltk curl fltk_images) #nlohmann_json::nlohmann_json )
-       # ${PROJECT_SOURCE_DIR}/src/lzma2201/C/sevenz.a)
-
-#in linker option add -s
+IF (WIN32)
+    add_definitions(-DNGHTTP2_STATICLIB -DCURL_STATICLIB -DNO_SSL_DL)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+    png z nghttp2 ssl crypto psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon
+    crypt32 ws2_32 wldap32 user32 shell32 comctl32 iconv unistring -s -mwindows -static)
+ENDIF()
