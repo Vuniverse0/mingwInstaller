@@ -78,20 +78,26 @@ const std::vector<BuildInfo>& Manager::getInfo()
         curl = curl_easy_init();
 
         if(curl) {
+	    curl_easy_setopt(curl , CURLOPT_VERBOSE, 1L);
+	    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/niXman/mingw-builds-binaries/releases");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             curl_easy_setopt(curl, CURLOPT_USERAGENT, "Anon");
-
+	    char error[CURL_ERROR_SIZE]; /* needs to be at least this big */ //a
+	    CURLcode ret = curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error);//a
             for (auto &header: headers_strings)
                 curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header);
-
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             res = curl_easy_perform(curl);
             curl_easy_cleanup(curl);
-
-        }
-
+	    if(res)
+		printf("%s", error);
+        }else{
+	    throw std::runtime_error("otaval curla in init");
+	}
+	if(readBuffer.empty()){
+	   throw std::runtime_error("otaval curla after init");
+	}
         fillBuffer(buffer, readBuffer); ///Parse
 
         versions.resize(buffer.size());
