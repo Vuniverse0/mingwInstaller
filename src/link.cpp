@@ -132,7 +132,7 @@ double directory_delete(const char* pathname)
         if(msgboxID == IDYES){
             MessageBox(
             NULL,
-            error.c_str(),
+            error,
             "Problem",
             MB_OK
             );
