@@ -120,6 +120,7 @@ double directory_delete(const char* pathname)
     {
         return 0;
     }
+    }
     void showError(const char* error)
     {
          int msgboxID = MessageBox(
