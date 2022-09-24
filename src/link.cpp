@@ -2,6 +2,7 @@
 #include <filesystem>
 #ifdef WIN32
 #include <windows.h>
+#include <winuser.h>
 #include <stdio.h>
 #include <sys/stat.h> // stat
 #include <tchar.h> // _tcscpy,_tcscat,_tcscmp
@@ -119,6 +120,25 @@ double directory_delete(const char* pathname)
     {
         return 0;
     }
+    void showError(const char* error)
+    {
+         int msgboxID = MessageBox(
+        NULL,
+        (LPCWSTR)L"Check internet conection. Details?",
+        (LPCWSTR)L"Problem",
+        MB_YESNO
+        );
+        if(msgboxID == IDYES){
+            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+            std::wstring er{converter.from_bytes(std::string(error))};
+            MessageBox(
+            NULL,
+            er.c_str(),
+            (LPCWSTR)L"Problem",
+            MB_OK
+            );
+        }
+    }
 }
 
 #else
@@ -129,5 +149,9 @@ void link(const std::string& ptchExecutableFileName, const std::string& ptchShor
 double directory_delete(const char* pathname)
 {
     std::filesystem::remove_all(pathname);
+}
+void showError(const char* error)
+{
+    printf("%s", error);
 }
 #endif

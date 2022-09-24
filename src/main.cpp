@@ -15,6 +15,8 @@ void back_cb(Fl_Widget*,void*) { G_wiz->prev(); }
 void next_cb(Fl_Widget*,void*) { G_wiz->next(); } ///while(1){force_update(0);  }} for tests
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
+void showError(const char* error);
+
 void page_about(); ///about
 
 void page_();  ///hello
@@ -43,7 +45,7 @@ int force_update(size_t now, size_t all) {
 }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) try {
     Fl::scheme("gtk+");
 
     //G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
@@ -66,4 +68,6 @@ int main(int argc, char **argv) {
     G_win->show(argc, argv);
     next_cb(G_wiz, nullptr);
     return Fl::run();
+} catch ( std::exception& error ){
+    showError(error.what());
 }
