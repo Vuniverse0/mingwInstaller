@@ -182,13 +182,14 @@ void Manager::unpack()
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
     std::filesystem::current_path(installDir);
-    std::filesystem::path mingw(std::filesystem::current_path()/"mingw32");
+    std::filesystem::path mingw(std::filesystem::current_path()/
+    folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
     if(exists(mingw))
-        directory_delete("mingw32");
+        directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
     Fl::remove_timeout(Timer_CB);
     if(seven_z(force_update, 3, args)){
         if(exists(mingw))
-            directory_delete("mingw32");
+            directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
         return ;
     }
     status = Status::Done;
@@ -452,24 +453,27 @@ Fl_RGB_Image* Manager::logo(bool box)
     return logo;
 }
 
-const char* Manager::createIcon()
+std::string Manager::createIcon()
 {
-    std::string_view file_name = "mingw32/icon.ico\0";
-    FILE *file = fopen(file_name.data(), "wb");
+    std::string file_name = folderNames[downloadCandidate.architecture == Arcs::x86_64].data();
+    file_name += "/icon.ico";
+    FILE *file = fopen(file_name.c_str(), "wb");
     fwrite(icon, 1, icon_len, file);
     fclose(file);
-    return file_name.data();
+    return file_name;
 }
 
-const char*  Manager::createBat()
+std::string Manager::createBat()
 {
-    std::string_view file_name = "mingw32/mingw.bat\0";
-    FILE *file = fopen(file_name.data(), "wb");
+    std::string file_name = folderNames[downloadCandidate.architecture == Arcs::x86_64].data();
+    file_name += "/mingw.bat";
+    FILE *file = fopen(file_name.c_str(), "wb");
     std::string bat = "@echo off\n"
-                      "set PATH=" + Manager::manager.installDir + "mingw32/bin/;%PATH%\n"
+                      "set PATH=" + Manager::manager.installDir +
+                      folderNames[downloadCandidate.architecture == Arcs::x86_64].data() + "/bin/;%PATH%\n"
                       "%windir%\\system32\\cmd.exe";
     fwrite(bat.c_str(), 1, bat.size(), file);
     fclose(file);
-    return file_name.data();
+    return file_name;
 }
 

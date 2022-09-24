@@ -36,6 +36,7 @@ public:
             "Accept: application/vnd.github+json"
     };
 private:
+    std::array<std::string_view, 2> folderNames{"mingw32\0", "mingw64\0"};
     const BuildInfo& getCandidate();
     const std::vector<BuildInfo>& getInfo();
     static void fillBuffer(std::vector<BuildInfo>& buff, const std::string& data);
@@ -49,8 +50,8 @@ private:
 
     void downloading();
 
-    [[nodiscard]] static const char* createBat();
-    [[nodiscard]] static const char* createIcon() ;
+    [[nodiscard]] std::string createBat();
+    [[nodiscard]] std::string createIcon() ;
 
     void *http_handle = nullptr, //CURL
     *multi_handle = nullptr; //CURLM
