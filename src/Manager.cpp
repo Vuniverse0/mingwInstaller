@@ -323,7 +323,8 @@ void Manager::extractEnd()
         status = Status::Downloaded;
     }else if(status == Status::Done) {
         page6_set(Page6state::done);
-        link(installDir + createBat(), installDir + "Mingw.url", installDir + createIcon());
+        link(installDir + createBat(), installDir + ( downloadCandidate.architecture == Arcs::i686 ?
+        "Mingw32.url" : "Mingw64.url" ), installDir + createIcon());
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
