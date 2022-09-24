@@ -125,17 +125,15 @@ double directory_delete(const char* pathname)
     {
          int msgboxID = MessageBox(
         NULL,
-        (LPCWSTR)L"Check internet conection. Details?",
-        (LPCWSTR)L"Problem",
+        "Check internet conection. Details?",
+        "Problem",
         MB_YESNO
         );
         if(msgboxID == IDYES){
-            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-            std::wstring er{converter.from_bytes(std::string(error))};
             MessageBox(
             NULL,
-            er.c_str(),
-            (LPCWSTR)L"Problem",
+            error.c_str(),
+            "Problem",
             MB_OK
             );
         }
