@@ -386,7 +386,7 @@ void Manager::sortVersions()
 
 Fl_RGB_Image* Manager::logo(bool box)
 {
-    auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
+    auto* logo = new Fl_PNG_Image("", getIcon().pointer, static_cast<int>(getIcon().size));
     if(box) {
         auto *box_l = new Fl_Box(0, 0, 312, 312);
         box_l->image(logo);
@@ -399,7 +399,7 @@ std::string Manager::createIcon()
     std::string file_name = folderNames[downloadCandidate.architecture == Arcs::x86_64].data();
     file_name += "/icon.ico";
     FILE *file = fopen(file_name.c_str(), "wb");
-    fwrite(icon, 1, icon_len, file);
+    fwrite(getIcon().pointer, 1, getIcon().size, file);
     fclose(file);
     return file_name;
 }

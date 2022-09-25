@@ -1,8 +1,9 @@
 #ifndef MINGWINSTALLER_LOGO_H
 #define MINGWINSTALLER_LOGO_H
 
-extern unsigned char logo_png[];
+#include "Picture.hpp"
 
-extern unsigned int logo_png_len;
+
+Picture getLogo();
 
 #endif //MINGWINSTALLER_LOGO_H

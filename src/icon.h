@@ -1,8 +1,9 @@
 #ifndef MINGWINSTALLER_ICON_H
 #define MINGWINSTALLER_ICON_H
 
-extern unsigned char icon[];
+#include "Picture.hpp"
 
-extern unsigned int icon_len;
+
+Picture getIcon();
 
 #endif //MINGWINSTALLER_ICON_H
