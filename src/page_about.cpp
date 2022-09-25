@@ -16,9 +16,7 @@ void page_about()
 
     text->value(  "<h1>About</h1>"
                   "<p>This installer was developed by <a href=\"https://github.com/Vuniverse0/\">Vuniverse</a>."
-                  "</p> <p> It is open <a href=\"https://github.com/Vuniverse0/mingwInstaller/\">source</a>."
-                  "<p>Report an error or a bug: v.universe@pm.me</p>");
-
+                  "</p> <p> It is open <a href=\"https://github.com/Vuniverse0/mingwInstaller/\">source</a>.");
     text->textsize(20);
 
     auto *next = new Fl_Button(button_x + png_size, button_y, button_width, button_height, "Ok");
@@ -28,3 +26,4 @@ void page_about()
 
     g->end();
 }
+//TODO add my contacts like email
