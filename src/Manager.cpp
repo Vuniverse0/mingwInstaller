@@ -248,6 +248,7 @@ void Manager::download()
         /* write the page body to this file handle */
         curl_easy_setopt(http_handle, CURLOPT_WRITEDATA,  (void*)dataFile);
     }else{
+        showError("file error");
         throw std::runtime_error("Can't create download file");
     }
 
@@ -279,6 +280,7 @@ void Manager::downloading()
     else{
         fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
         status = Status::Error;
+        showError("download error");
         downloadEnd();
         return;
     }
