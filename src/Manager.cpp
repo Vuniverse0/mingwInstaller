@@ -3,37 +3,44 @@
 #include <filesystem>
 #include <algorithm>
 
-#include <curl/curl.h>
 
+#include <Fl/Fl.H>
 #include <Fl/Fl_PNG_Image.H>
+#include <Fl/Fl_Box.H>
 
 #include "curl_tools.hpp"
-#include "logo.h"
-#include "icon.h"
-#include "link.h"
+#include "logo.hpp"
+#include "icon.hpp"
+#include "link.hpp"
+
+#include <curl/curl.h>
 
 #include "flatjson.hpp"
+
+
+Manager Manager::manager{};
 
 void progressSet(float rate);
 
 extern "C" {
-int force_update(size_t now, size_t all)
-{
-    Fl::wait(1.0/60.);
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
-    return Manager::manager.extractCancel();
-}
+    int force_update(size_t now, size_t all)
+    {
+        Fl::wait(1.0/60.);
+        progressSet(static_cast<float>(now) / static_cast<float>(all));
+        return Manager::manager.extractCancel();
+    }
 
-int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);
+    int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);
 }
 
 enum class Page7state{download, downloading, extract, extracting, done, error };
+
 void page7_set(Page7state state);
 
 void auto_extract();
 
 //Curl progress
-int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
+int progress_func(void*, double TotalToDownload, double NowDownloaded, double, double)
 {
     if (TotalToDownload > 0.0)
         progressSet(static_cast<float>(NowDownloaded / TotalToDownload));
@@ -193,7 +200,7 @@ void Manager::unpack()
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 
-void Manager::Timer_CB(void *userdata) {
+void Manager::Timer_CB(void *) {
     switch (manager.status) {
         case Status::Empty:
             break;
@@ -276,7 +283,7 @@ void Manager::downloading()
 {
     CURLMcode mc = curl_multi_perform(multi_handle, &(still_running));
     if (!mc) /* wait for activity, timeout or "nothing" */
-        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, 0);
+        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, nullptr);
     else{
         fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
         status = Status::Error;
@@ -384,7 +391,8 @@ void Manager::sortVersions()
               });
 }
 
-Fl_RGB_Image* Manager::logo(bool box)
+//Fl_RGB_Image
+void* Manager::logo(bool box)
 {
     auto* logo = new Fl_PNG_Image("", getLogo().pointer, static_cast<int>(getLogo().size));
     if(box) {
@@ -417,5 +425,3 @@ std::string Manager::createBat()
     fclose(file);
     return file_name;
 }
-
-Manager Manager::manager{};
