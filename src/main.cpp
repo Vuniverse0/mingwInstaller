@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
     G_win->icon(Manager::logo(false));
-
+    printf("init pages");
     page_about();
     page_0();
     page_1();
@@ -50,10 +50,15 @@ int main(int argc, char **argv)
     page_5();
     page_6();
     page_7();
+    printf("init pages end");
 
     G_wiz->end();
     G_win->end();
+    printf("init window end");
+
     G_win->show(argc, argv);
+    printf("show window");
     next_cb(G_wiz, nullptr);
+    printf("next cb");
     return Fl::run();
 }
