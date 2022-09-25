@@ -1,12 +1,8 @@
 #include "pages.hpp"
-
 #include "Manager.hpp"
 
-#include <Fl/Fl_File_Chooser.H>
 
-
-///exceptions realization
-void update4();
+void update4(); ///exceptions realization
 
 ///architecture
 namespace {
@@ -14,33 +10,28 @@ namespace {
             "32 bit\0",
             "64 bit\0"
     };
-
     Fl_Choice *choice;
 
-    void choice_callback(Fl_Button *obj, void *)
-    {
-        Manager::manager.downloadCandidate.architecture = choice->value() ? Arcs::x86_64 : Arcs::i686;
+    void choice_callback(Fl_Button *obj, void *) {
+        size_t value = choice->value();
+        Manager::manager.downloadCandidate.architecture = !value ? Arcs::i686 : Arcs::x86_64;
         update4();
     }
 }
 
 
-void page_2()
-{
-    auto *g = new Fl_Group(0, 0, width, height);
-
-    auto *next = new Fl_Button(button_x + png_size, button_y, button_width, button_height, "Next @->");
+void page_2() {
+    Fl_Group *g = new Fl_Group(0, 0, width, height);
+    Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
-
-    auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
-                               button_width, button_height, "@<- Back");
+    Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select an architecture");
+    Fl_Box *out = new Fl_Box(20+png_size, 100, 25, 25, "Select an architecture");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    choice = new Fl_Choice(200 + png_size, 150, static_cast<int>(15 * (archs[0].size() * 2)), 45);
+    choice = new Fl_Choice(200+png_size, 150, 15 * (archs[0].size() * 2), 45); //,"Select a version");
 
     for (auto &arch: archs)
         choice->add(arch.data());

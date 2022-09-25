@@ -10,4 +10,5 @@ struct DownloadButton : Fl_Button {
     void downloading();
 };
 
+
 #endif //MINGWINSTALLER_DOWNLOADBUTTON_HPP

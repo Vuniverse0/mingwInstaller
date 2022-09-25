@@ -1,42 +1,47 @@
 #include "Manager.hpp"
 
-#include "flatjson.hpp"
+#include <filesystem>
+#include <algorithm>
 
 #include <curl/curl.h>
 
-#include <FL/Fl.H>
 #include <Fl/Fl_PNG_Image.H>
-#include <Fl/Fl_Box.H>
 
 #include "curl_tools.hpp"
-#include "logo.hpp"
-#include "icon.hpp"
-#include "link.hpp"
+#include "logo.h"
+#include "icon.h"
+#include "link.h"
 
-#include <filesystem>
-#include <algorithm>
+#ifndef NLOHMANN_JSON
+#define FLAT_JSON
+#endif
+
+#ifdef TEST_FLATJSON
+#define FLAT_JSON
+#define NLOHMANN_JSON
+#endif
+
+#ifdef FLAT_JSON
+#include "flatjson.hpp"
+#endif
+
+#ifdef NLOHMANN_JSON
+#include <nlohmann/json.hpp>
+#endif
 
 
 Manager Manager::manager{};
 
+extern "C" { int force_update(size_t, size_t); }
+
 extern "C"{ int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);}
 
 enum class Page6state{download, downloading, extract, extracting, done, error };
-
-void page7_set(Page6state state);
+void page6_set(Page6state state);
 
 void progressSet(float);
 
 void auto_extract();
-
-extern "C" {
-int force_update(size_t now, size_t all)
-{
-    Fl::wait(1.0/60.);
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
-    return Manager::manager.extractCancel();
-}
-}
 
 int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
 {
@@ -45,7 +50,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
     return 0;
 }
 
-const std::vector<std::size_t>& Manager::getRevsForCandidate()
+const std::vector<size_t>& Manager::getRevsForCandidate()
 {
     revs.clear();
     for(auto& it: buffer){
@@ -53,7 +58,7 @@ const std::vector<std::size_t>& Manager::getRevsForCandidate()
             revs.push_back(it.revision);
     }
     revs.erase(std::unique(revs.begin(), revs.end()), revs.end());
-    std::sort(revs.begin(), revs.end(), std::greater());
+    std::sort(revs.begin(), revs.end(), std::greater()); ///[](auto a, auto b){return a > b;} );
     return revs;
 }
 
@@ -114,7 +119,7 @@ BuildInfo Manager::parseName(const std::string& name)
 
     const char *tokenValue = strtok(buff, "-");
 
-    for(std::size_t i = 0; tokenValue; ++i){
+    for(size_t i = 0; tokenValue; ++i){
         switch (i) {
             case 0:
                 buildInfo.architecture =
@@ -146,7 +151,7 @@ BuildInfo Manager::parseName(const std::string& name)
                         : ExcRs::error;
                 break;
             case 6:
-                buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
+                buildInfo.revision = static_cast<size_t>(std::stoi(tokenValue+3));
                 break;
             default: break;
         }
@@ -198,8 +203,7 @@ void Manager::unpack()
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 
-void Manager::Timer_CB(void *userdata)
-{
+void Manager::Timer_CB(void *userdata) {
     switch (manager.status) {
         case Status::Empty:
             break;
@@ -265,7 +269,7 @@ void Manager::download()
 
     status = Status::Downloading;
 
-    page7_set(Page6state::downloading);
+    page6_set(Page6state::downloading);
 
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
@@ -273,7 +277,7 @@ void Manager::download()
 void Manager::extract()
 {
     status = Status::Extracting;
-    page7_set(Page6state::extracting);
+    page6_set(Page6state::extracting);
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
 
@@ -281,7 +285,7 @@ void Manager::downloading()
 {
     CURLMcode mc = curl_multi_perform(multi_handle, &(still_running));
     if (!mc) /* wait for activity, timeout or "nothing" */
-        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, nullptr);
+        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, 0);
     else{
         fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
         status = Status::Error;
@@ -294,8 +298,7 @@ void Manager::downloading()
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
 
-void Manager::downloadEnd()
-{
+void Manager::downloadEnd() {
     fclose(dataFile);
 
     curl_multi_remove_handle(multi_handle, http_handle);
@@ -307,13 +310,11 @@ void Manager::downloadEnd()
 
     multi_handle = http_handle = dataFile = nullptr;
 
-    page7_set(Page6state::download);
+    page6_set(Page6state::download);
 
-    if(status == Status::Downloaded) {
+    if(status == Status::Downloaded){
         auto_extract();
         printf("Download Finished");
-    }else if(status == Status::Error){
-        throw std::runtime_error("curl: downloading error");
     }else{
         status = Status::Empty;
         printf("Download Canceled");
@@ -325,13 +326,12 @@ int Manager::extractCancel() const { return status != Status::Extracting; }
 void Manager::extractEnd()
 {
     if(status == Status::Extracting) {
-        page7_set(Page6state::extract);
+        page6_set(Page6state::extract);
         status = Status::Downloaded;
     }else if(status == Status::Done) {
-        page7_set(Page6state::done);
-        link(installDir + createBat(),
-        installDir + (downloadCandidate.architecture == Arcs::i686 ? "Mingw32.url" : "Mingw64.url"),
-        installDir + createIcon());
+        page6_set(Page6state::done);
+        link(installDir + createBat(), installDir + ( downloadCandidate.architecture == Arcs::i686 ?
+        "Mingw32.url" : "Mingw64.url" ), installDir + createIcon());
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }
@@ -347,6 +347,50 @@ void Manager::cancel()
 
 void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& readBuffer)
 {
+#ifdef TEST_FLATJSON
+    #undef FLAT_JSON
+    #undef FLAT_JSON
+    std::vector<BuildInfo> test_buffer;
+    nlohmann::json data = nlohmann::json::parse(readBuffer);
+        for( auto& page : data )
+            for (auto &link: page.at("assets")) {
+                auto name = to_string(link.at("name"));
+                BuildInfo nl_buildInfo;
+                nl_buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
+                nl_buildInfo = parseName(nl_buildInfo.name);
+                nl_buildInfo.download = to_string(link.at("browser_download_url"));
+                nl_buildInfo.download = std::string(nl_buildInfo.download.begin() + 1, nl_buildInfo.download.end() - 1);
+                test_buffer.push_back( nl_buildInfo );
+            }
+
+    flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
+    assert(data.is_array());
+    auto it = test_buffer.begin();
+    for(std::size_t size_d = data.size(), i = 0; i<size_d; ++i) {
+        auto page_json = data.at(i).at("assets");
+        assert(page_json.is_array());
+        for(std::size_t size_p = page_json.size(), j = 0; j<size_p; ++j) {
+            //assert(itp->is_object());
+            auto link = page_json.at(j);
+            BuildInfo buildInfo;
+            buildInfo.name = link.at("name").to_string();
+            buildInfo = parseName(buildInfo.name);
+            buildInfo.download = link.at("browser_download_url").to_string();
+            buffer.push_back(buildInfo);
+
+            assert(buildInfo.name == it->name);
+            assert(buildInfo.revision == it->revision);
+            assert(buildInfo.architecture == it->architecture);
+            assert(buildInfo.exception == it->exception);
+            assert(buildInfo.multithreading == it->multithreading);
+            assert(buildInfo.version == it->version);
+            assert(buildInfo.download == it->download);
+            ++it;
+        }
+    }
+#endif
+
+#ifdef FLAT_JSON
     flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
     assert(data.is_array());
     for(std::size_t size_d = data.size(), i = 0; i < size_d; ++i) {
@@ -361,39 +405,53 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
             buffer.push_back(buildInfo);
         }
     }
+#endif
+
+#ifdef NLOHMANN_JSON
+    nlohmann::json data = nlohmann::json::parse(readBuffer);
+        for( auto& page : data )
+            for (auto &link: page.at("assets")) {
+                auto name = to_string(link.at("name"));
+                BuildInfo buildInfo;
+                buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
+                buildInfo = parseName(buildInfo.name);
+                buildInfo.download = to_string(link.at("browser_download_url"));
+                buildInfo.download = std::string(buildInfo.download.begin() + 1, buildInfo.download.end() - 1);
+                buffer.push_back( buildInfo );
+            }
+#endif
 }
 
 void Manager::sortVersions()
 {
     std::sort(versions.begin(), versions.end(),
-        [](auto& first, auto& second)->bool {
-          std::size_t fpos1{}, fpos2{};
-          std::size_t spos1{}, spos2{};
-          int f = stoi(first, &fpos1);
-          int s = stoi(second, &spos1);
-          if( f > s )
-              return true;
-          else if( f < s )
-              return false;
-          f = stoi(std::string(first.begin() + 1 + fpos1, first.end()), &fpos2);
-          s = stoi(std::string(second.begin() + 1 + spos1, second.end()), &spos2);
-          if( f > s )
-              return true;
-          else if( f < s )
-              return false;
-          f = stoi(std::string(first.begin() + 2 + fpos1 + fpos2, first.end()));
-          s = stoi(std::string(second.begin() + 2 + spos1 + spos2, second.end()));
-          if( f > s )
-              return true;
-          else if( f < s )
-              return false;
-          return false;
-          ///TODO rewrite versions, make version class and normal comparing
-        });
+              [](auto& first, auto& second)->bool {
+                  std::size_t fpos1{}, fpos2{};
+                  std::size_t spos1{}, spos2{};
+                  int f = stoi(first, &fpos1);
+                  int s = stoi(second, &spos1);
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  f = stoi(std::string(first.begin() + 1 + fpos1, first.end()), &fpos2);
+                  s = stoi(std::string(second.begin() + 1 + spos1, second.end()), &spos2);
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  f = stoi(std::string(first.begin() + 2 + fpos1 + fpos2, first.end()));
+                  s = stoi(std::string(second.begin() + 2 + spos1 + spos2, second.end()));
+                  if( f > s )
+                      return true;
+                  else if( f < s )
+                      return false;
+                  return false;
+                  ///TODO rewrite versions, make version class and normal comparing
+              });
 }
 
-//Fl_RGB_Image*
-void* Manager::logo(bool box)
+Fl_RGB_Image* Manager::logo(bool box)
 {
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
     if(box) {
