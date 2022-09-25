@@ -44,13 +44,13 @@ int main(int argc, char **argv) try {
     G_win->icon(Manager::logo(false));
 
     page_about();
-    page_0();
+    page_();
     page_1();
     page_2();
     page_3();
     page_4();
     page_5();
-    page_6();
+    page_0();
     page_7();
 
     G_wiz->end();
