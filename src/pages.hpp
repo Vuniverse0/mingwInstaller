@@ -11,7 +11,6 @@ constexpr std::size_t button_height = 25;
 constexpr std::size_t button_x = 540;
 constexpr std::size_t button_y = 280;
 
-#include <FL/Fl.H>
 #include <Fl/Fl_Widget.H>
 
 void next_cb(Fl_Widget*, void*);
