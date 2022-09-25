@@ -4,7 +4,7 @@
 #include <cstdint>
 
 struct Picture{
-    const std::uint8_t *pointer;
+    std::uint8_t *pointer;
     std::size_t size;
 };
 

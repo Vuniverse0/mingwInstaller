@@ -386,7 +386,7 @@ void Manager::sortVersions()
 
 Fl_RGB_Image* Manager::logo(bool box)
 {
-    auto* logo = new Fl_PNG_Image("", getIcon().pointer, static_cast<int>(getIcon().size));
+    auto* logo = new Fl_PNG_Image("", getLogo().pointer, static_cast<int>(getLogo().size));
     if(box) {
         auto *box_l = new Fl_Box(0, 0, 312, 312);
         box_l->image(logo);

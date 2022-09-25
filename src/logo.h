@@ -3,7 +3,6 @@
 
 #include "Picture.hpp"
 
-
 Picture getLogo();
 
 #endif //MINGWINSTALLER_LOGO_H
