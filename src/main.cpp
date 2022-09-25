@@ -19,9 +19,7 @@ void showError(const char* error);
 
 void page_about(); ///about
 
-void page_();  ///hello
-
-void page_0();  ///choose dir
+void page_0();  ///hello
 
 void page_1();  ///version
 
@@ -33,41 +31,32 @@ void page_4(); ///exceptions realization
 
 void page_5();  ///revision
 
-void page_6();  ///download
+void page_6();  ///choose dir
 
-void progressSet(float rate);
+void page_7();  ///download
 
-extern "C" {
-int force_update(size_t now, size_t all) {
-    Fl::wait(1.0/60.);
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
-    return Manager::manager.extractCancel();
-}
-}
-
-int main(int argc, char **argv) try {
+int main(int argc, char **argv) try
+{
     Fl::scheme("gtk+");
-
-    //G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
     G_win->icon(Manager::logo(false));
 
     page_about();
-    page_();
+    page_0();
     page_1();
     page_2();
     page_3();
     page_4();
     page_5();
-    page_0();
     page_6();
+    page_7();
 
     G_wiz->end();
     G_win->end();
     G_win->show(argc, argv);
     next_cb(G_wiz, nullptr);
     return Fl::run();
-} catch ( std::exception& error ){
+}catch( std::exception& error ){
     showError(error.what());
 }
