@@ -7,8 +7,8 @@ void update4(); ///exceptions realization
 ///architecture
 namespace {
     const std::array<std::string_view, 2> archs{
-            "32 bit\0",
-            "64 bit\0"
+        "32 bit\0",
+        "64 bit\0"
     };
     Fl_Choice *choice;
 

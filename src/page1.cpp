@@ -32,7 +32,7 @@ void page_1()
 
     const std::vector<std::string>& versions =  Manager::manager.getVersions();
 
-    choice = new Fl_Choice(200 + png_size, 150, 15 * (12), 45);
+    choice = new Fl_Choice(200 + png_size, 150, 15 * 12, 45);
 
     for(auto &version : versions)
         choice->add(version.c_str());

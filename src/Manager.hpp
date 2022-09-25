@@ -21,7 +21,7 @@ public:
     void downloadEnd();
     void extract();
     void extractEnd();
-    int extractCancel() const;
+    [[nodiscard]] int extractCancel() const;
     void cancel();
 
 
@@ -29,14 +29,16 @@ public:
 
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
-    void unpack();
-    const std::array<const std::string, 2> headers_strings
-    {
+
+private:
+    const std::array<const std::string, 2> headers_strings{
             "Authorization: Bearer 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",
             "Accept: application/vnd.github+json"
     };
-private:
-    std::array<std::string_view, 2> folderNames{"mingw32\0", "mingw64\0"};
+    std::array<std::string_view, 2> folderNames{
+        "mingw32\0",
+        "mingw64\0"
+    };
     const BuildInfo& getCandidate();
     const std::vector<BuildInfo>& getInfo();
     static void fillBuffer(std::vector<BuildInfo>& buff, const std::string& data);
@@ -44,19 +46,24 @@ private:
     static BuildInfo parseName(const std::string& name);
     static void Timer_CB(void *userdata);
 
-    std::vector<BuildInfo> buffer;
-    std::vector<std::string> versions{};
-    std::vector<std::size_t> revs{};
-
+    void unpack();
     void downloading();
 
     [[nodiscard]] std::string createBat();
     [[nodiscard]] std::string createIcon() ;
 
-    void *http_handle = nullptr, //CURL
-    *multi_handle = nullptr; //CURLM
+    //CURL
+    void *http_handle = nullptr,
+    //CURLM
+    *multi_handle = nullptr;
+
     FILE *dataFile = nullptr;
+
     int still_running = 0;
+
+    std::vector<BuildInfo> buffer;
+    std::vector<std::string> versions{};
+    std::vector<std::size_t> revs{};
 
     enum class Status{
         Empty,

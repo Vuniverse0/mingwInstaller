@@ -417,4 +417,3 @@ std::string Manager::createBat()
     fclose(file);
     return file_name;
 }
-
