@@ -4,13 +4,13 @@ project(mingwInstaller)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(nlohmann_json 3.2.0 REQUIRED)
-
 add_executable(mingwInstaller
         src/main.cpp
         src/unpack.c
         src/DownloadButton.cpp
         src/Manager.cpp
+
+        src/page_about.cpp
         src/page.cpp
         src/page0.cpp
         src/page1.cpp
@@ -19,6 +19,10 @@ add_executable(mingwInstaller
         src/page4.cpp
         src/page5.cpp
         src/page6.cpp
+
+        src/logo.cpp
+        src/link.cpp
+        src/icon.cpp
 
         src/lzma2201/C/Bcj2.c
         src/lzma2201/C/Bra.c
@@ -41,8 +45,7 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zBuf2.c
         src/lzma2201/C/7zDec.c
         src/lzma2201/C/7zFile.c
-        src/lzma2201/C/7zStream.c
-        src/logo.cpp src/link.cpp src/icon.cpp src/page_about.cpp)
+        src/lzma2201/C/7zStream.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fltk fltk_images curl)
 

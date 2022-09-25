@@ -16,7 +16,7 @@ void page_about()
                   "<p>This installer was developed by <a href=\"https://github.com/Vuniverse0/\">Vuniverse</a>."
                   "</p> <p> It is open <a href=\"https://github.com/Vuniverse0/mingwInstaller/\">source</a>.");
     text->textsize(20);
-//TODO add my contacts like email 
+//TODO add my contacts like email
     Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Ok");
     next->callback(next_cb);
 
