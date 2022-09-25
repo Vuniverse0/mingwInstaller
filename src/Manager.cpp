@@ -29,7 +29,7 @@ Manager Manager::manager{};
 extern "C"{ int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);}
 
 enum class Page6state{download, downloading, extract, extracting, done, error };
-void page6_set(Page6state state);
+void page7_set(Page6state state);
 
 void auto_extract();
 
@@ -40,7 +40,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
     return 0;
 }
 
-const std::vector<size_t>& Manager::getRevsForCandidate()
+const std::vector<std::size_t>& Manager::getRevsForCandidate()
 {
     revs.clear();
     for(auto& it: buffer){
@@ -109,7 +109,7 @@ BuildInfo Manager::parseName(const std::string& name)
 
     const char *tokenValue = strtok(buff, "-");
 
-    for(size_t i = 0; tokenValue; ++i){
+    for(std::size_t i = 0; tokenValue; ++i){
         switch (i) {
             case 0:
                 buildInfo.architecture =
@@ -141,7 +141,7 @@ BuildInfo Manager::parseName(const std::string& name)
                         : ExcRs::error;
                 break;
             case 6:
-                buildInfo.revision = static_cast<size_t>(std::stoi(tokenValue+3));
+                buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
                 break;
             default: break;
         }
@@ -259,7 +259,7 @@ void Manager::download()
 
     status = Status::Downloading;
 
-    page6_set(Page6state::downloading);
+    page7_set(Page6state::downloading);
 
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
@@ -267,7 +267,7 @@ void Manager::download()
 void Manager::extract()
 {
     status = Status::Extracting;
-    page6_set(Page6state::extracting);
+    page7_set(Page6state::extracting);
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
 
@@ -300,7 +300,7 @@ void Manager::downloadEnd() {
 
     multi_handle = http_handle = dataFile = nullptr;
 
-    page6_set(Page6state::download);
+    page7_set(Page6state::download);
 
     if(status == Status::Downloaded){
         auto_extract();
@@ -316,10 +316,10 @@ int Manager::extractCancel() const { return status != Status::Extracting; }
 void Manager::extractEnd()
 {
     if(status == Status::Extracting) {
-        page6_set(Page6state::extract);
+        page7_set(Page6state::extract);
         status = Status::Downloaded;
     }else if(status == Status::Done) {
-        page6_set(Page6state::done);
+        page7_set(Page6state::done);
         link(installDir + createBat(), installDir + ( downloadCandidate.architecture == Arcs::i686 ?
         "Mingw32.url" : "Mingw64.url" ), installDir + createIcon());
     }else
@@ -382,10 +382,11 @@ void Manager::sortVersions()
               });
 }
 
-Fl_RGB_Image* Manager::logo(bool box)
+//Fl_RGB_Image
+void* Manager::logo(bool box)
 {
     auto* logo = new Fl_PNG_Image("", logo_png, static_cast<int>(logo_png_len));
-    if(box) {
+    if(box){
         auto *box_l = new Fl_Box(0, 0, 312, 312);
         box_l->image(logo);
     }

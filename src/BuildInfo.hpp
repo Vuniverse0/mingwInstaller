@@ -34,7 +34,4 @@ bool operator==(SelectInfo a, SelectInfo b)
     ;
 }
 
-
-
-
 #endif //MINGWINSTALLER_BUILDINFO_HPP

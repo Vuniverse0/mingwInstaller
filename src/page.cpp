@@ -7,8 +7,7 @@
 
 
 ///hello page
-
-void page_()
+void page_0() //TODO rename page files
 {
     Fl_Group *g = new Fl_Group(0, 0, width, height);
     Fl_Help_View* text = new Fl_Help_View(50+png_size, 1, 600, 275);

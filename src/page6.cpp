@@ -16,7 +16,7 @@ enum class Page6state{download, downloading, extract, extracting, done, error };
 
 void auto_extract(){if(download) download->extracting(); else throw std::runtime_error("download page 6");}
 
-void page6_set(Page6state state)
+void page7_set(Page6state state)
 {
     if(  !out   ) throw std::runtime_error("out not defined page 6");
     if(!progress) throw std::runtime_error("progress not defined page 6");
@@ -62,11 +62,11 @@ static void reset(Fl_Widget *button, void * d)
 {
     Manager::manager.cancel();
     if(download) download->downloading();
-    page6_set(Page6state::download);
+    page7_set(Page6state::download);
     back_cb(button, d);
 }
 
-void page_6() {
+void page_7() {
     auto *g = new Fl_Group(0, 0, width, height);
 
     download = new DownloadButton(button_x+png_size, button_y, button_width, button_height, "Download");
