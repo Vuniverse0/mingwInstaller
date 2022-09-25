@@ -1,3 +1,0 @@
-/home/vuniverse/CLionProjects/mingwInstaller/cmake-build-debug/CMakeFiles/mingwInstaller.dir
-/home/vuniverse/CLionProjects/mingwInstaller/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/vuniverse/CLionProjects/mingwInstaller/cmake-build-debug/CMakeFiles/rebuild_cache.dir
