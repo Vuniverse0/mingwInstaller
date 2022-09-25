@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <algorithm>
 
+#include <curl/curl.h>
 
 #include <Fl/Fl.H>
 #include <Fl/Fl_PNG_Image.H>
@@ -12,8 +13,6 @@
 #include "logo.hpp"
 #include "icon.hpp"
 #include "link.hpp"
-
-#include <curl/curl.h>
 
 #include "flatjson.hpp"
 
