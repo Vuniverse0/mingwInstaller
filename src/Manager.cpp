@@ -89,14 +89,10 @@ const std::vector<BuildInfo>& Manager::getInfo()
             curl_easy_cleanup(curl);
 	        if(res)
                 showError(error);
-        }else {
-            showError("curl in init error");
+        }else
             throw std::runtime_error("curl in init error");
-        }
-	    if(readBuffer.empty()){
-            showError("curl after init error");
-            throw std::runtime_error("curl after init error");
-        }
+	    if(readBuffer.empty())
+	        throw std::runtime_error("curl after init error");
 
         fillBuffer(buffer, readBuffer); ///Parse
 
@@ -196,7 +192,6 @@ void Manager::unpack()
     if(seven_z(force_update, 3, args)){
         if(exists(mingw))
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
-        showError("Unpack error: unable to extract");
         return ;
     }
     status = Status::Done;
@@ -259,7 +254,6 @@ void Manager::download()
         /* write the page body to this file handle */
         curl_easy_setopt(http_handle, CURLOPT_WRITEDATA,  (void*)dataFile);
     }else{
-        showError("Download file doesn`t exist");
         throw std::runtime_error("Can't create download file");
     }
 
@@ -291,7 +285,6 @@ void Manager::downloading()
     else{
         fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
         status = Status::Error;
-        showError("curl_multi_poll() failed");
         downloadEnd();
         return;
     }

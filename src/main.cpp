@@ -1,18 +1,18 @@
-#include "pages.hpp"
-#include "Manager.hpp"
-
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Wizard.H>
 
+#include "pages.hpp"
+#include "Manager.hpp"
+
 
 namespace {
-    Fl_Window *G_win = nullptr;
-    Fl_Wizard *G_wiz = nullptr;
+    Fl_Window *G_win = 0;
+    Fl_Wizard *G_wiz = 0;
 }
 
-void back_cb(Fl_Widget*,void*) { if(G_wiz)G_wiz->prev(); }
-void next_cb(Fl_Widget*,void*) { if(G_wiz)G_wiz->next(); } ///while(1){force_update(0);  }} for tests
+void back_cb(Fl_Widget*,void*) { G_wiz->prev(); }
+void next_cb(Fl_Widget*,void*) { G_wiz->next(); } ///while(1){force_update(0);  }} for tests
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
 void showError(const char* error);
@@ -35,7 +35,7 @@ void page_6();  ///choose dir
 
 void page_7();  ///download
 
-int main(int argc, char **argv)
+int main(int argc, char **argv) try
 {
     Fl::scheme("gtk+");
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
@@ -57,4 +57,6 @@ int main(int argc, char **argv)
     G_win->show(argc, argv);
     next_cb(G_wiz, nullptr);
     return Fl::run();
+}catch( std::exception& error ){
+    showError(error.what());
 }
