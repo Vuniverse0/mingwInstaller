@@ -13,7 +13,12 @@ constexpr size_t button_height = 25;
 constexpr size_t button_x = 540;
 constexpr size_t button_y = 280;
 
-#include <Fl/Fl_Widget.H>
+#include <FL/Fl.H>
+#include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include <Fl/Fl_Choice.H>
 
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);
