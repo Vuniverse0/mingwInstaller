@@ -2,8 +2,13 @@
 
 #include "Manager.hpp"
 
+#include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
 #include "Fl/Fl_File_Chooser.H"
 #include "Fl/Fl_Multiline_Output.H"
+
 
 ///directory
 namespace {
@@ -34,6 +39,7 @@ namespace {
             fc->show();
     }
 }
+
 
 void page_0()
 {

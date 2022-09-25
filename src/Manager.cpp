@@ -17,22 +17,22 @@
 void progressSet(float rate);
 
 extern "C" {
-int force_update(size_t now, size_t all) {
+int force_update(size_t now, size_t all)
+{
     Fl::wait(1.0/60.);
     progressSet(static_cast<float>(now) / static_cast<float>(all));
     return Manager::manager.extractCancel();
 }
+
+int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);
 }
 
-Manager Manager::manager{};
-
-extern "C"{ int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);}
-
-enum class Page6state{download, downloading, extract, extracting, done, error };
-void page6_set(Page6state state);
+enum class Page7state{download, downloading, extract, extracting, done, error };
+void page7_set(Page7state state);
 
 void auto_extract();
 
+//Curl progress
 int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
 {
     if (TotalToDownload > 0.0)
@@ -48,7 +48,7 @@ const std::vector<std::size_t>& Manager::getRevsForCandidate()
             revs.push_back(it.revision);
     }
     revs.erase(std::unique(revs.begin(), revs.end()), revs.end());
-    std::sort(revs.begin(), revs.end(), std::greater()); ///[](auto a, auto b){return a > b;} );
+    std::sort(revs.begin(), revs.end(), std::greater());
     return revs;
 }
 
@@ -260,7 +260,7 @@ void Manager::download()
 
     status = Status::Downloading;
 
-    page6_set(Page6state::downloading);
+    page7_set(Page7state::downloading);
 
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
@@ -268,7 +268,7 @@ void Manager::download()
 void Manager::extract()
 {
     status = Status::Extracting;
-    page6_set(Page6state::extracting);
+    page7_set(Page7state::extracting);
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
 
@@ -302,7 +302,7 @@ void Manager::downloadEnd() {
 
     multi_handle = http_handle = dataFile = nullptr;
 
-    page6_set(Page6state::download);
+    page7_set(Page7state::download);
 
     if(status == Status::Downloaded){
         auto_extract();
@@ -318,10 +318,10 @@ int Manager::extractCancel() const { return status != Status::Extracting; }
 void Manager::extractEnd()
 {
     if(status == Status::Extracting) {
-        page6_set(Page6state::extract);
+        page7_set(Page7state::extract);
         status = Status::Downloaded;
     }else if(status == Status::Done) {
-        page6_set(Page6state::done);
+        page7_set(Page7state::done);
         link(installDir + createBat(), installDir + ( downloadCandidate.architecture == Arcs::i686 ?
         "Mingw32.url" : "Mingw64.url" ), installDir + createIcon());
     }else
@@ -417,3 +417,5 @@ std::string Manager::createBat()
     fclose(file);
     return file_name;
 }
+
+Manager Manager::manager{};

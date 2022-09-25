@@ -12,42 +12,42 @@ namespace {
     Fl_Button *back = nullptr;
 }
 
-enum class Page6state{download, downloading, extract, extracting, done, error };
+enum class Page7state{download, downloading, extract, extracting, done, error };
 
 void auto_extract(){if(download) download->extracting(); else throw std::runtime_error("download page 6");}
 
-void page6_set(Page6state state)
+void page7_set(Page7state state)
 {
     if(  !out   ) throw std::runtime_error("out not defined page 6");
     if(!progress) throw std::runtime_error("progress not defined page 6");
     if(!download) throw std::runtime_error("download not defined page 6");
 
     switch (state) {
-        case Page6state::download:
+        case Page7state::download:
             out->label("Download              ");
             progress->hide();
             progress->value(0.f);
             break;
-        case Page6state::downloading:
+        case Page7state::downloading:
             out->label("Downloading...       ");
             progress->show();
             break;
-        case Page6state::extract:
+        case Page7state::extract:
             out->label("Extract              ");
             progress->hide();
             progress->value(0.f);
             break;
-        case Page6state::extracting:
+        case Page7state::extracting:
             out->label("Extracting...       ");
             progress->show();
             break;
-        case Page6state::done:
+        case Page7state::done:
             out->label("Done              ");
             download->callback(done_cb);
             download->label("Finish");
             back->hide();
             break;
-        case Page6state::error:
+        case Page7state::error:
             throw std::runtime_error("state::error page6");
     }
 }
@@ -62,7 +62,7 @@ static void reset(Fl_Widget *button, void * d)
 {
     Manager::manager.cancel();
     if(download) download->downloading();
-    page6_set(Page6state::download);
+    page7_set(Page7state::download);
     back_cb(button, d);
 }
 

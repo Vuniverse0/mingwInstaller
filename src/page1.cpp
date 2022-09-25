@@ -1,9 +1,15 @@
 #include "pages.hpp"
 #include "Manager.hpp"
-#include "Fl/Fl_File_Chooser.H"
+
+#include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include <Fl/Fl_Choice.H>
 
 
-void update5(); ///revision
+///revision
+void update5();
 
 ///version
 namespace {
@@ -14,6 +20,7 @@ namespace {
         update5();
     }
 }
+
 
 void page_1()
 {

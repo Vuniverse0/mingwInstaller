@@ -2,7 +2,8 @@
 
 #include "Manager.hpp"
 
-#include <Fl/Fl_Text_Display.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
 #include <Fl/Fl_Help_View.H>
 
 

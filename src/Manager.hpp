@@ -6,10 +6,6 @@
 #include "BuildInfo.hpp"
 
 
-enum class ExcRs;
-enum class MgRs;
-enum class Arcs;
-
 class Manager final {
     explicit Manager() = default;
 public:
