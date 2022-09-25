@@ -12,12 +12,7 @@ constexpr std::size_t button_x = 540;
 constexpr std::size_t button_y = 280;
 
 #include <FL/Fl.H>
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Box.H>
-#include <Fl/Fl_Choice.H>
-
+#include <Fl/Fl_Widget.H>
 
 void next_cb(Fl_Widget*, void*);
 void back_cb(Fl_Widget*, void*);
