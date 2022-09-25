@@ -40,7 +40,7 @@ int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, doubl
     return 0;
 }
 
-const std::vector<size_t>& Manager::getRevsForCandidate()
+const std::vector<std::size_t>& Manager::getRevsForCandidate()
 {
     revs.clear();
     for(auto& it: buffer){
@@ -109,7 +109,7 @@ BuildInfo Manager::parseName(const std::string& name)
 
     const char *tokenValue = strtok(buff, "-");
 
-    for(size_t i = 0; tokenValue; ++i){
+    for(std::size_t i = 0; tokenValue; ++i){
         switch (i) {
             case 0:
                 buildInfo.architecture =
@@ -141,7 +141,7 @@ BuildInfo Manager::parseName(const std::string& name)
                         : ExcRs::error;
                 break;
             case 6:
-                buildInfo.revision = static_cast<size_t>(std::stoi(tokenValue+3));
+                buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
                 break;
             default: break;
         }

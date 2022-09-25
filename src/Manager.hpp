@@ -28,7 +28,7 @@ public:
     static Fl_RGB_Image* logo(bool box = true);
 
     const std::vector<std::string>& getVersions();
-    const std::vector<size_t>& getRevsForCandidate();
+    const std::vector<std::size_t>& getRevsForCandidate();
     void unpack();
     const std::array<const std::string, 2> headers_strings
     {
@@ -46,7 +46,7 @@ private:
 
     std::vector<BuildInfo> buffer;
     std::vector<std::string> versions{};
-    std::vector<size_t> revs{};
+    std::vector<std::size_t> revs{};
 
     void downloading();
 
