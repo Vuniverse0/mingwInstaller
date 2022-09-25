@@ -1,26 +1,31 @@
 #include "pages.hpp"
+
 #include "Manager.hpp"
+
+#include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include <Fl/Fl_Choice.H>
 
 
 ///exceptions realization
 namespace {
-    const std::array<std::string_view, 3> exrs{
+    const std::array<std::string_view, 3> exceptions{
             "sjlj\0",
             "dwarf\0",
             "seh\0"
     };
     bool isDwarf;
     Fl_Choice *choice;
-    void choice_callback(Fl_Button *obj, void *)
+    void choice_callback(Fl_Button *, void *)
     {
         Manager::manager.downloadCandidate.exception =
-                (
-                static_cast<size_t>(choice->value()) != 0
+                (static_cast<std::size_t>(choice->value()) != 0
                 ? isDwarf
                 ? ExcRs::dwarf
                 : ExcRs::seh
-                : ExcRs::sjlj
-                );
+                : ExcRs::sjlj);
     }
 }
 
@@ -29,28 +34,32 @@ void update4()
 {
     auto res_page2 = static_cast<int8_t>(Manager::manager.downloadCandidate.architecture);
     choice->clear();
-    choice->add(exrs[0].data());
-    choice->add(exrs[res_page2 + 1].data());
+    choice->add(exceptions[0].data());
+    choice->add(exceptions[res_page2 + 1].data());
     isDwarf = !res_page2;
     choice->value(0);
     Manager::manager.downloadCandidate.exception = ExcRs::sjlj;
 }
 
-void page_4() {
-    Fl_Group *g = new Fl_Group(0, 0, width, height);
-    Fl_Button *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
+void page_4()
+{
+    auto *g = new Fl_Group(0, 0, width, height);
+
+    auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
-    Fl_Button *back = new Fl_Button(button_x-button_width-20+png_size, button_y, button_width, button_height, "@<- Back");
+
+    auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
+                               button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    Fl_Box *out = new Fl_Box(20+png_size, 100, 25, 25, "Select a exceptions");
+    auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select a exceptions");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    choice = new Fl_Choice(200+png_size, 150, 15 * (exrs[0].size()*2), 45); //,"Select a version");
+    choice = new Fl_Choice(200 + png_size, 150, static_cast<int>(15 * exceptions[0].size() * 2), 45);
 
-    choice->add(exrs[0].data());
-    choice->add(exrs[1].data());
+    choice->add(exceptions[0].data());
+    choice->add(exceptions[1].data());
 
     choice->value(0);
     choice->textsize(20);
@@ -59,5 +68,4 @@ void page_4() {
     Manager::logo();
 
     g->end();
-
 }

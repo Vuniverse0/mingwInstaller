@@ -28,7 +28,8 @@ namespace {
 }
 
 
-void page_2() {
+void page_2()
+{
     auto *g = new Fl_Group(0, 0, width, height);
 
     auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
