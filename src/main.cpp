@@ -1,7 +1,6 @@
 #include "pages.hpp"
 #include "Manager.hpp"
 
-#include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Wizard.H>
 
