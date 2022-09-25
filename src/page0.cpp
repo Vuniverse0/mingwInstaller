@@ -36,7 +36,7 @@ namespace {
 }
 
 
-void page_6()
+void page_0()
 {
     Fl_Group *g = new Fl_Group(0, 0, width, height);
 

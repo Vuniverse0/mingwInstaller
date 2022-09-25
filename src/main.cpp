@@ -19,7 +19,9 @@ void showError(const char* error);
 
 void page_about(); ///about
 
-void page_0();  ///hello
+void page_();  ///hello
+
+void page_0();  ///choose dir
 
 void page_1();  ///version
 
@@ -31,9 +33,7 @@ void page_4(); ///exceptions realization
 
 void page_5();  ///revision
 
-void page_6();  ///choose dir
-
-void page_7();  ///download
+void page_6();  ///download
 
 int main(int argc, char **argv) try {
     Fl::scheme("gtk+");
@@ -51,7 +51,7 @@ int main(int argc, char **argv) try {
     page_4();
     page_5();
     page_0();
-    page_7();
+    page_6();
 
     G_wiz->end();
     G_win->end();
