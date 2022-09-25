@@ -10,7 +10,7 @@ namespace {
         "32 bit\0",
         "64 bit\0"
     };
-    
+
     Fl_Choice *choice;
 
     void choice_callback(Fl_Button *obj, void *) {
