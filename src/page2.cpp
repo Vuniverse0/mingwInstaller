@@ -2,7 +2,15 @@
 #include "Manager.hpp"
 
 
-void update4(); ///exceptions realization
+#include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include <Fl/Fl_Choice.H>
+
+
+///exceptions realization
+void update4();
 
 ///architecture
 namespace {
@@ -13,7 +21,7 @@ namespace {
 
     Fl_Choice *choice;
 
-    void choice_callback(Fl_Button *obj, void *) {
+    void choice_callback(Fl_Button *, void *) {
         Manager::manager.downloadCandidate.architecture = choice->value() ?  Arcs::x86_64 : Arcs::i686;
         update4();
     }

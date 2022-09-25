@@ -46,16 +46,16 @@ private:
     void downloading();
 
     [[nodiscard]] std::string createBat();
-    [[nodiscard]] std::string createIcon() ;
+    [[nodiscard]] std::string createIcon();
 
     //CURL
-    void *http_handle = nullptr,
+    void *http_handle = nullptr;
     //CURLM
-    *multi_handle = nullptr;
-
-    FILE *dataFile = nullptr;
+    void *multi_handle = nullptr;
 
     int still_running = 0;
+
+    FILE *dataFile = nullptr;
 
     std::vector<BuildInfo> buffer;
     std::vector<std::string> versions{};

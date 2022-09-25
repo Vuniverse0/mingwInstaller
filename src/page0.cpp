@@ -29,7 +29,7 @@ namespace {
         next->show();
     }
 
-    void call_back_page_1(Fl_Widget* w, void*)
+    void call_back_page_1(Fl_Widget*, void*)
     {
         if (!fc) {
             fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
@@ -53,8 +53,8 @@ void page_0()
                                button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    auto *set_dirr = new Fl_Button(235 + png_size, 150, 100, 25, "Chose");
-    set_dirr->callback(call_back_page_1);
+    auto *set_dir = new Fl_Button(235 + png_size, 150, 100, 25, "Chose");
+    set_dir->callback(call_back_page_1);
 
     box = new Fl_Multiline_Output(100 + png_size, 200, 500, 25,"Install in: ");
     box->hide();

@@ -1,4 +1,5 @@
 #include "pages.hpp"
+
 #include "Manager.hpp"
 
 #include <FL/Fl_Widget.H>
@@ -14,7 +15,7 @@ void update5();
 ///version
 namespace {
     Fl_Choice *choice;
-    void choice_callback(Fl_Button *obj, void *)
+    void choice_callback(Fl_Button *, void *)
     {
         Manager::manager.downloadCandidate.version = static_cast<std::size_t>(choice->value());
         update5();
