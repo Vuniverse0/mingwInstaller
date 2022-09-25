@@ -35,16 +35,6 @@ void page_5();  ///revision
 
 void page_6();  ///download
 
-void progressSet(float rate);
-
-extern "C" {
-int force_update(size_t now, size_t all) {
-    Fl::wait(1.0/60.);
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
-    return Manager::manager.extractCancel();
-}
-}
-
 int main(int argc, char **argv) try {
     Fl::scheme("gtk+");
 

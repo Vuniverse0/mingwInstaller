@@ -12,34 +12,24 @@
 #include "icon.h"
 #include "link.h"
 
-#ifndef NLOHMANN_JSON
-#define FLAT_JSON
-#endif
-
-#ifdef TEST_FLATJSON
-#define FLAT_JSON
-#define NLOHMANN_JSON
-#endif
-
-#ifdef FLAT_JSON
 #include "flatjson.hpp"
-#endif
 
-#ifdef NLOHMANN_JSON
-#include <nlohmann/json.hpp>
-#endif
+void progressSet(float rate);
 
+extern "C" {
+int force_update(size_t now, size_t all) {
+    Fl::wait(1.0/60.);
+    progressSet(static_cast<float>(now) / static_cast<float>(all));
+    return Manager::manager.extractCancel();
+}
+}
 
 Manager Manager::manager{};
-
-extern "C" { int force_update(size_t, size_t); }
 
 extern "C"{ int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);}
 
 enum class Page6state{download, downloading, extract, extracting, done, error };
 void page6_set(Page6state state);
-
-void progressSet(float);
 
 void auto_extract();
 
@@ -347,50 +337,6 @@ void Manager::cancel()
 
 void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& readBuffer)
 {
-#ifdef TEST_FLATJSON
-    #undef FLAT_JSON
-    #undef FLAT_JSON
-    std::vector<BuildInfo> test_buffer;
-    nlohmann::json data = nlohmann::json::parse(readBuffer);
-        for( auto& page : data )
-            for (auto &link: page.at("assets")) {
-                auto name = to_string(link.at("name"));
-                BuildInfo nl_buildInfo;
-                nl_buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
-                nl_buildInfo = parseName(nl_buildInfo.name);
-                nl_buildInfo.download = to_string(link.at("browser_download_url"));
-                nl_buildInfo.download = std::string(nl_buildInfo.download.begin() + 1, nl_buildInfo.download.end() - 1);
-                test_buffer.push_back( nl_buildInfo );
-            }
-
-    flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
-    assert(data.is_array());
-    auto it = test_buffer.begin();
-    for(std::size_t size_d = data.size(), i = 0; i<size_d; ++i) {
-        auto page_json = data.at(i).at("assets");
-        assert(page_json.is_array());
-        for(std::size_t size_p = page_json.size(), j = 0; j<size_p; ++j) {
-            //assert(itp->is_object());
-            auto link = page_json.at(j);
-            BuildInfo buildInfo;
-            buildInfo.name = link.at("name").to_string();
-            buildInfo = parseName(buildInfo.name);
-            buildInfo.download = link.at("browser_download_url").to_string();
-            buffer.push_back(buildInfo);
-
-            assert(buildInfo.name == it->name);
-            assert(buildInfo.revision == it->revision);
-            assert(buildInfo.architecture == it->architecture);
-            assert(buildInfo.exception == it->exception);
-            assert(buildInfo.multithreading == it->multithreading);
-            assert(buildInfo.version == it->version);
-            assert(buildInfo.download == it->download);
-            ++it;
-        }
-    }
-#endif
-
-#ifdef FLAT_JSON
     flatjson::fjson data{readBuffer.c_str(), readBuffer.c_str()+readBuffer.length()};
     assert(data.is_array());
     for(std::size_t size_d = data.size(), i = 0; i < size_d; ++i) {
@@ -405,21 +351,6 @@ void Manager::fillBuffer(std::vector<BuildInfo> &buffer, const std::string& read
             buffer.push_back(buildInfo);
         }
     }
-#endif
-
-#ifdef NLOHMANN_JSON
-    nlohmann::json data = nlohmann::json::parse(readBuffer);
-        for( auto& page : data )
-            for (auto &link: page.at("assets")) {
-                auto name = to_string(link.at("name"));
-                BuildInfo buildInfo;
-                buildInfo.name = std::string(name.begin() + 1, name.end() - 1);
-                buildInfo = parseName(buildInfo.name);
-                buildInfo.download = to_string(link.at("browser_download_url"));
-                buildInfo.download = std::string(buildInfo.download.begin() + 1, buildInfo.download.end() - 1);
-                buffer.push_back( buildInfo );
-            }
-#endif
 }
 
 void Manager::sortVersions()
