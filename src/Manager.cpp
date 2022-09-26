@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 
 #include <Fl/Fl_PNG_Image.H>
+#include <FL/Fl_Box.H>
 
 #include "curl_tools.hpp"
 #include "logo.hpp"
@@ -13,6 +14,7 @@
 #include "link.hpp"
 
 #include "flatjson.hpp"
+
 
 void progressSet(float rate);
 

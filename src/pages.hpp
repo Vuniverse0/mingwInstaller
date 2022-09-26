@@ -7,10 +7,6 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Box.H>
-#include <Fl/Fl_Choice.H>
 
 constexpr size_t width = 650 + 300;
 constexpr size_t height = 300 + 10;

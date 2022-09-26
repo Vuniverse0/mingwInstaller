@@ -3,6 +3,8 @@
 
 #include <array>
 
+#include <FL/Fl_RGB_Image.H>
+
 #include "BuildInfo.hpp"
 
 
