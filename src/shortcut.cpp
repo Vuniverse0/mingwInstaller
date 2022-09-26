@@ -12,7 +12,6 @@
 #include <string>
 
 #ifdef WIN32
-#include "stdafx.h"
 #include "windows.h"
 #include "winnls.h"
 #include "shobjidl.h"
