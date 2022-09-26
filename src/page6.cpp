@@ -59,7 +59,7 @@ void page_6()
     box = new Fl_Multiline_Output(100 + png_size, 200, 500, 25,"Install in: ");
     box->hide();
 
-    auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select an install directory");
+    auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
     out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
