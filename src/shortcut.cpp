@@ -18,7 +18,7 @@
 #include "objbase.h"
 #include "objidl.h"
 #include "shlguid.h"
-#include "shobjidl_core.h"
+#include "shobjidl.h"
 #include <cwchar>
 
 PWSTR getProgramsFolder();
