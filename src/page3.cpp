@@ -18,8 +18,7 @@ namespace {
     Fl_Choice *choice;
     void choice_callback(Fl_Button *, void *)
     {
-        size_t value = choice->value();
-        Manager::manager.downloadCandidate.multithreading = !value ? MgRs::win32 : MgRs::posix;
+        Manager::manager.downloadCandidate.multithreading = choice->value() ? MgRs::posix : MgRs::win32;
     }
 }
 

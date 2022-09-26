@@ -16,9 +16,11 @@ namespace {
             "dwarf\0",
             "seh\0"
     };
+
     bool isDwarf;
     Fl_Choice *choice;
-    void choice_callback(Fl_Button *, void *)
+
+    void choice_callback(Fl_Button*, void*)
     {
         Manager::manager.downloadCandidate.exception =
                 (static_cast<std::size_t>(choice->value()) != 0
@@ -32,7 +34,7 @@ namespace {
 
 void update4()
 {
-    auto res_page2 = static_cast<int8_t>(Manager::manager.downloadCandidate.architecture);
+    auto res_page2 = static_cast<std::uint8_t>(Manager::manager.downloadCandidate.architecture);
     choice->clear();
     choice->add(exceptions[0].data());
     choice->add(exceptions[res_page2 + 1].data());
