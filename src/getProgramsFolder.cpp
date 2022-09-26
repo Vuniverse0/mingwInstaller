@@ -13,4 +13,5 @@ PWSTR getProgramsFolder()
     HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &path);
     return path;
 }
+
 #endif

@@ -42,24 +42,25 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszDesc)
         // Query IShellLink for the IPersistFile interface, used for saving the
         // shortcut in persistent storage.
         hres = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf);
-
+        printf("File to startup menu 45);
         if (SUCCEEDED(hres))
         {
             WCHAR wsz[MAX_PATH];
-
+             printf("File to startup menu 49);
             auto path = getProgramsFolder();
             wcsncpy (wsz, path, wcslen(path));
             wcsncpy (wsz, L"/mingw/MinGW_W64", wcslen(path));
-
+            printf("File to startup menu 53);
             // Add code here to check return value from MultiByteWideChar
             // for success.
-
+            printf("File to startup menu 56);
             // Save the link by calling IPersistFile::Save.
             hres = ppf->Save(wsz, TRUE);
             ppf->Release();
         }
         psl->Release();
     }
+    printf("File to startup menu 63);
     return hres;
 }
 
