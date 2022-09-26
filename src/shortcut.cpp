@@ -23,7 +23,7 @@
 
 PWSTR getProgramsFolder();
 
-HRESULT CreateLink(LPCWSTR lpszPathObj, LPCWSTR lpszDesc)
+HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszDesc)
 {
     HRESULT hres;
     IShellLink* psl;
@@ -55,7 +55,7 @@ HRESULT CreateLink(LPCWSTR lpszPathObj, LPCWSTR lpszDesc)
             // for success.
 
             // Save the link by calling IPersistFile::Save.
-            hres = ppf->Save(, TRUE);
+            hres = ppf->Save(wsz, TRUE);
             ppf->Release();
         }
         psl->Release();
@@ -65,9 +65,9 @@ HRESULT CreateLink(LPCWSTR lpszPathObj, LPCWSTR lpszDesc)
 
 void shortcut(const std::string& file, const std::string& description)
 {
-    std::wstring wfile = std::wstring(file.begin(), file.end());
-    std::wstring wdescription = std::wstring(description.begin(), description.end());
-    CreateLink(wfile.c_str(), wdescription.c_str());
+    //std::wstring wfile = std::wstring(file.begin(), file.end());
+    //std::wstring wdescription = std::wstring(description.begin(), description.end());
+    CreateLink(file.c_str(), description.c_str());
 }
 
 #else
