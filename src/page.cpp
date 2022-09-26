@@ -8,7 +8,7 @@
 
 
 ///hello page
-void page_() //TODO rename pages files, fix description to online installer, add readme and pull. Compress binaries
+void page_()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 
