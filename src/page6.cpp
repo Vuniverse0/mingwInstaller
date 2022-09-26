@@ -11,6 +11,8 @@
 #include "Fl/Fl_File_Chooser.H"
 #include "Fl/Fl_Multiline_Output.H"
 
+#include <algorithm>
+
 
 ///directory
 namespace {
@@ -58,6 +60,8 @@ void page_6()
 
     box = new Fl_Multiline_Output(100 + png_size, 150, 500, 25,"Install in: ");
     Manager::manager.installDir = home();
+    std::replace(Manager::manager.installDir.begin(), Manager::manager.installDir.end(), '\\', '/');
+    Manager::manager.installDir += '/';
     box->value(Manager::manager.installDir.c_str());
 
     auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");

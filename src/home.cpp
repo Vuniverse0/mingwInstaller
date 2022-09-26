@@ -24,7 +24,7 @@ std::string home()
 std::string home()
 {
     //Hardcoded for debug on Linux
-    return "/home/vuniverse/";
+    return "/home/vuniverse";
 }
 
 #endif
