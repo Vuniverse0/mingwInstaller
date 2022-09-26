@@ -16,14 +16,14 @@ namespace {
     Fl_Button *next;
     Fl_Multiline_Output *box;
 
-    void choice_callback(Fl_File_Chooser *obj, void *)
+    void choose_callback(Fl_File_Chooser *obj, void *)
     {
         if(fc->visible()) return;
         Manager::manager.installDir = obj->value();
         box->value(Manager::manager.installDir.c_str());
         box->show();
         if(obj != fc)
-            throw std::runtime_error("choice_callback page0(5.5) ");
+            throw std::runtime_error("choose_callback page0(5.5) ");
         delete fc;
         fc = nullptr;
         next->show();
@@ -33,7 +33,7 @@ namespace {
     {
         if (!fc) {
             fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
-            fc->callback(choice_callback);
+            fc->callback(choose_callback);
             fc->show();
         }else if(!fc->visible())
             fc->show();
@@ -53,7 +53,7 @@ void page_6()
                                button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    auto *set_dir = new Fl_Button(235 + png_size, 150, 100, 25, "Chose");
+    auto *set_dir = new Fl_Button(235 + png_size, 150, 100, 25, "Choose");
     set_dir->callback(call_back_page_1);
 
     box = new Fl_Multiline_Output(100 + png_size, 200, 500, 25,"Install in: ");
