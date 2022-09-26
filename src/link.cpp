@@ -2,6 +2,9 @@
 
 #include <filesystem>
 
+
+void shortcut(const std::string& file, const std::string& description);
+
 #ifdef WIN32
 #include <windows.h>
 #include <winuser.h>
@@ -38,6 +41,7 @@ BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcut
 void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon)
 {
     CreateShortcut(ptchExecutableFileName.c_str(), ptchShortcutName.c_str(), icon.c_str());
+    shortcut(ptchExecutableFileName, "Description");
 }
 
 double directory_delete(const char* pathname)
@@ -147,7 +151,9 @@ void showError(const char* error)
 void link(const std::string& ExecutableFileName, const std::string& ShortcutName, const std::string& icon)
 {
     printf("Wanna to create shortcut for:  %s, named:  %s", ExecutableFileName.c_str(), ShortcutName.c_str());
+    shortcut(ExecutableFileName, "Description");
 }
+
 double directory_delete(const char* pathname)
 {
     std::filesystem::remove_all(pathname);

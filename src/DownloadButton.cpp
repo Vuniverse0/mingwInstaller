@@ -44,3 +44,5 @@ DownloadButton::DownloadButton(int x, int y, int w, int h, const char *label)
 void DownloadButton::extracting() { DownloadCallbacks::extract_cb(this, nullptr); }
 
 void DownloadButton::downloading() { DownloadCallbacks::download_stop_cb(this, nullptr); }
+
+void DownloadButton::download() { DownloadCallbacks::download_cb(this, nullptr); }

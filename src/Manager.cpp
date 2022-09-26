@@ -292,20 +292,22 @@ void Manager::downloading()
     Fl::repeat_timeout(1.0/60.0, Timer_CB);
 }
 
-void Manager::downloadEnd() {
-    fclose(dataFile);
+void Manager::downloadEnd()
+{
+    if (status == Status::Downloading || status == Status::Downloaded) {
+        fclose(dataFile);
 
-    curl_multi_remove_handle(multi_handle, http_handle);
-    curl_easy_cleanup(http_handle);
-    curl_multi_cleanup(multi_handle);
-    curl_global_cleanup();
+        curl_multi_remove_handle(multi_handle, http_handle);
+        curl_easy_cleanup(http_handle);
+        curl_multi_cleanup(multi_handle);
+        curl_global_cleanup();
 
-    still_running = 0;
+        still_running = 0;
 
-    multi_handle = http_handle = dataFile = nullptr;
+        multi_handle = http_handle = dataFile = nullptr;
 
-    page7_set(Page7state::download);
-
+        page7_set(Page7state::download);
+    }
     if(status == Status::Downloaded){
         auto_extract();
         printf("Download Finished");

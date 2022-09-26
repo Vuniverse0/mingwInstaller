@@ -8,6 +8,7 @@ struct DownloadButton : Fl_Button {
     DownloadButton(int x, int y, int w, int h, const char *label = nullptr);
     void extracting();
     void downloading();
+    void download();
 };
 
 

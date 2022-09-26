@@ -14,6 +14,14 @@ namespace {
     Fl_Button *back = nullptr;
 }
 
+void auto_download_cb(Fl_Widget* w, void* d)
+{
+    if(download)
+        download->download();
+    else
+        throw std::runtime_error("download page 6");
+    next_cb(w, d);
+}
 
 void auto_extract()
 {
