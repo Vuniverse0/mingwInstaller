@@ -2,7 +2,6 @@
 #define MINGWINSTALLER_MANAGER_HPP
 
 #include <array>
-#include <vector>
 
 #include "BuildInfo.hpp"
 
@@ -21,8 +20,8 @@ public:
     [[nodiscard]] int extractCancel() const;
     void cancel();
 
-    //Fl_RGB_Image
-    static void* logo(bool box = true);
+
+    static Fl_RGB_Image* logo(bool box = true);
 
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
@@ -32,12 +31,10 @@ private:
             "Authorization: Bearer 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",
             "Accept: application/vnd.github+json"
     };
-
     std::array<std::string_view, 2> folderNames{
         "mingw32\0",
         "mingw64\0"
     };
-
     const BuildInfo& getCandidate();
     const std::vector<BuildInfo>& getInfo();
     static void fillBuffer(std::vector<BuildInfo>& buff, const std::string& data);
@@ -73,5 +70,6 @@ private:
         Error
     } status = Status::Empty;
 };
+
 
 #endif //MINGWINSTALLER_MANAGER_HPP

@@ -1,12 +1,8 @@
 #ifndef MINGWINSTALLER_BUILDINFO_HPP
 #define MINGWINSTALLER_BUILDINFO_HPP
 
-#include <string>
+#include "pages.hpp"
 
-
-enum class ExcRs{ sjlj, dwarf, seh, error};
-enum class MgRs{ win32, posix, error};
-enum class Arcs{ i686, x86_64, error};
 
 struct BuildInfo {
     std::string name;
@@ -29,11 +25,16 @@ struct SelectInfo {
 template<typename T = decltype(SelectInfo::version)>
 bool operator==(SelectInfo a, SelectInfo b)
 {
-    return a.version == b.version
+    return
+       a.version == b.version
     && a.revision == b.revision
     && a.architecture == b.architecture
     && a.multithreading == b.multithreading
-    && a.exception == b.exception;
+    && a.exception == b.exception
+    ;
 }
+
+
+
 
 #endif //MINGWINSTALLER_BUILDINFO_HPP

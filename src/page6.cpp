@@ -1,7 +1,5 @@
-#include "pages.hpp"
-
-#include "Manager.hpp"
 #include "DownloadButton.hpp"
+#include "Manager.hpp"
 
 #include <Fl/Fl_Progress.H>
 #include <FL/Fl_Group.H>

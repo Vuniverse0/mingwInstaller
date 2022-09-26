@@ -1,4 +1,4 @@
-#include "logo.hpp"
+#include "logo.h"
 
 
  static std::uint8_t logo_png[] = {
