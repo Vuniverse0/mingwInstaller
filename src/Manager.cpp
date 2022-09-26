@@ -19,14 +19,14 @@
 void progressSet(float rate);
 
 extern "C" {
-int force_update(size_t now, size_t all)
-{
-    Fl::wait(1.0/60.);
-    progressSet(static_cast<float>(now) / static_cast<float>(all));
-    return Manager::manager.extractCancel();
-}
+    int force_update(size_t now, size_t all)
+    {
+        Fl::wait(1.0/60.);
+        progressSet(static_cast<float>(now) / static_cast<float>(all));
+        return Manager::manager.extractCancel();
+    }
 
-int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);
+    int seven_z(int(*)(size_t, size_t), int numArgs, const char *args[]);
 }
 
 enum class Page7state{download, downloading, extract, extracting, done, error };
@@ -193,7 +193,8 @@ void Manager::unpack()
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 
-void Manager::Timer_CB(void *) {
+void Manager::Timer_CB(void *)
+{
     switch (manager.status) {
         case Status::Empty:
             break;

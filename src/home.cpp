@@ -1,8 +1,8 @@
 #include "home.hpp"
 
 #ifdef WIN32
-#include <Shlobj.h>
-#include <Shlobj_core.h>
+#include <shlobj.h>
+#include <shlobj_core.h>
 
 #include <stdexcept>
 
