@@ -2,66 +2,39 @@
 
 #include "Manager.hpp"
 
-#include <FL/Fl_Widget.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Box.H>
-#include "Fl/Fl_File_Chooser.H"
-#include "Fl/Fl_Multiline_Output.H"
+#include <Fl/Fl_Help_View.H>
 
 
-///directory
-namespace {
-    Fl_File_Chooser*  fc;
-    Fl_Button *next;
-    Fl_Multiline_Output *box;
-
-    void choice_callback(Fl_File_Chooser *obj, void *)
-    {
-        if(fc->visible()) return;
-        Manager::manager.installDir = obj->value();
-        box->value(Manager::manager.installDir.c_str());
-        box->show();
-        if(obj != fc)
-            throw std::runtime_error("choice_callback page0(5.5) ");
-        delete fc;
-        fc = nullptr;
-        next->show();
-    }
-
-    void call_back_page_1(Fl_Widget*, void*)
-    {
-        if (!fc) {
-            fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
-            fc->callback(choice_callback);
-            fc->show();
-        }else if(!fc->visible())
-            fc->show();
-    }
-}
-
-
+///hello page
 void page_0()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 
-    next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
+    auto *text = new Fl_Help_View(50 + png_size, 1, 600, 275);
+    text->value("<h1>Welcome to Mingw install wizard</h1>"
+                "<p>This installer was developed for Windows users of the MinGW-W64 compiler. "
+                "<a href=\"https://www.mingw-w64.org/\">MinGW-W64</a> is a native Windows compiler based "
+                "on the <a href=\"https://gcc.gnu.org/\">GNU C Compiler</a>. </p> <p>"
+                "Unlike MSVC or Intel C++ or any other proprietary compilers, "
+                "MinGW-W64 is an open source compiler which "
+                "allows any user to be sure that the compiler generates only "
+                "the machine code that is the result of compiling the source code "
+                "written by the user, without any covertly generated machine code.</p><p> "
+                "This is especially important for applications that was designed "
+                "to ensure the safety of a user in the information space.</p>");
+    text->textsize(15);
+
+    auto *about = new Fl_Button(png_size + 50, 280, button_width, button_height, "About");
+    about->callback(back_cb);
+
+    auto *next = new Fl_Button(button_x + png_size, button_y, button_width, button_height, "Next @->");
     next->callback(next_cb);
-    next->hide();
 
-    auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
-                               button_width, button_height, "@<- Back");
-    back->callback(back_cb);
-
-    auto *set_dir = new Fl_Button(235 + png_size, 150, 100, 25, "Chose");
-    set_dir->callback(call_back_page_1);
-
-    box = new Fl_Multiline_Output(100 + png_size, 200, 500, 25,"Install in: ");
-    box->hide();
-
-    auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select an install directory");
-    out->labelsize(45);
-    out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+    auto *back = new Fl_Button(button_x - button_width - 20 + png_size, 280,
+                                    button_width, button_height, "Exit");
+    back->callback(done_cb);
 
     Manager::logo();
 
