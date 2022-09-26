@@ -5,7 +5,7 @@
 
 
 void link(const std::string& ExecutableFileName, const std::string& ShortcutName, const std::string& icon);
-double directory_delete(const char* pathname);
+double directory_delete(const char* pathname); //TODO  SHFileOperationA
 void showError(const char* error);
 
 #endif //MINGWINSTALLER_LINK_HPP
