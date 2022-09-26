@@ -70,9 +70,7 @@ const std::vector<BuildInfo>& Manager::getInfo()
         curl = curl_easy_init();
 
         if(curl) {
-#ifndef NDEBUG
 	        curl_easy_setopt(curl , CURLOPT_VERBOSE, 1L);
-#endif
 	        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/niXman/mingw-builds-binaries/releases");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -225,6 +223,7 @@ void Manager::download()
 
     if(!http_handle) throw std::runtime_error("Curl corrupted");
 
+    curl_easy_setopt(http_handle, CURLOPT_SSL_VERIFYPEER, false);
     curl_easy_setopt(http_handle, CURLOPT_URL, candidate.download.c_str());
     curl_easy_setopt(http_handle, CURLOPT_USERAGENT, "Anon");
 
