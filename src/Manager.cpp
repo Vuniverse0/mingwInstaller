@@ -8,9 +8,9 @@
 #include <Fl/Fl_PNG_Image.H>
 
 #include "curl_tools.hpp"
-#include "logo.h"
-#include "icon.h"
-#include "link.h"
+#include "logo.hpp"
+#include "icon.hpp"
+#include "link.hpp"
 
 #include "flatjson.hpp"
 
