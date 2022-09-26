@@ -2,7 +2,6 @@
 
 #ifdef WIN32
 #include <shlobj.h>
-#include <shlobj_core.h>
 
 #include <stdexcept>
 
