@@ -22,19 +22,14 @@ struct SelectInfo {
     size_t revision = -1;
 };
 
-template<typename T = decltype(SelectInfo::version)>
-bool operator==(SelectInfo a, SelectInfo b)
+inline bool operator==(SelectInfo a, SelectInfo b)
 {
-    return
-       a.version == b.version
+    return a.version == b.version
     && a.revision == b.revision
     && a.architecture == b.architecture
     && a.multithreading == b.multithreading
-    && a.exception == b.exception
-    ;
+    && a.exception == b.exception;
 }
-
-
 
 
 #endif //MINGWINSTALLER_BUILDINFO_HPP

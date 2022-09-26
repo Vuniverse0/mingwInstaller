@@ -15,7 +15,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-static size_t header_callback(char *buffer, size_t size, size_t nitems, void *userdata)
+static size_t header_callback(char *, size_t size, size_t nitems, void *)
 {
     /* received header is nitems * size long in 'buffer' NOT ZERO TERMINATED */
     /* 'userdata' is set with CURLOPT_HEADERDATA */

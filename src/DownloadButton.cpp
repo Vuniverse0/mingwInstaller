@@ -33,7 +33,7 @@ namespace DownloadCallbacks {
         button->callback(extract_cb);
         Manager::manager.extractEnd();
     }
-};
+}
 
 DownloadButton::DownloadButton(int x, int y, int w, int h, const char *label)
     : Fl_Button(x, y, w, h, label)

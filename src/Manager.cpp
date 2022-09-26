@@ -33,7 +33,7 @@ void page7_set(Page7state state);
 void auto_extract();
 
 //Curl progress
-int progress_func(void* ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
+int progress_func(void*, double TotalToDownload, double NowDownloaded, double, double)
 {
     if (TotalToDownload > 0.0)
         progressSet(static_cast<float>(NowDownloaded / TotalToDownload));
@@ -193,7 +193,7 @@ void Manager::unpack()
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 
-void Manager::Timer_CB(void *userdata) {
+void Manager::Timer_CB(void *) {
     switch (manager.status) {
         case Status::Empty:
             break;
@@ -275,9 +275,10 @@ void Manager::extract()
 void Manager::downloading()
 {
     CURLMcode mc = curl_multi_perform(multi_handle, &(still_running));
-    if (!mc) /* wait for activity, timeout or "nothing" */
-        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, 0);
-    else{
+    if (!mc){ /* wait for activity, timeout or "nothing" */
+        mc = curl_multi_poll(multi_handle, nullptr, 0, 10, nullptr);
+        if(mc) showError("download error");
+    }else{
         fprintf(stderr, "curl_multi_poll() failed, code %d.\n", (int) mc);
         status = Status::Error;
         showError("download error");
@@ -360,21 +361,21 @@ void Manager::sortVersions()
     std::sort(versions.begin(), versions.end(),
               [](auto& first, auto& second)->bool {
                   std::size_t fpos1{}, fpos2{};
-                  std::size_t spos1{}, spos2{};
+                  std::size_t pos1{}, pos2{};
                   int f = stoi(first, &fpos1);
-                  int s = stoi(second, &spos1);
+                  int s = stoi(second, &pos1);
                   if( f > s )
                       return true;
                   else if( f < s )
                       return false;
                   f = stoi(std::string(first.begin() + 1 + fpos1, first.end()), &fpos2);
-                  s = stoi(std::string(second.begin() + 1 + spos1, second.end()), &spos2);
+                  s = stoi(std::string(second.begin() + 1 + pos1, second.end()), &pos2);
                   if( f > s )
                       return true;
                   else if( f < s )
                       return false;
                   f = stoi(std::string(first.begin() + 2 + fpos1 + fpos2, first.end()));
-                  s = stoi(std::string(second.begin() + 2 + spos1 + spos2, second.end()));
+                  s = stoi(std::string(second.begin() + 2 + pos1 + pos2, second.end()));
                   if( f > s )
                       return true;
                   else if( f < s )

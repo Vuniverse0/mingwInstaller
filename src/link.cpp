@@ -1,11 +1,14 @@
 #include "link.hpp"
+
 #include <filesystem>
+
 #ifdef WIN32
 #include <windows.h>
 #include <winuser.h>
 #include <stdio.h>
 #include <sys/stat.h> // stat
 #include <tchar.h> // _tcscpy,_tcscat,_tcscmp
+
 #include <algorithm> // replace
 
 using namespace std;
@@ -138,10 +141,12 @@ void showError(const char* error)
         );
     }
 }
+
 #else
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon)
+
+void link(const std::string& ExecutableFileName, const std::string& ShortcutName, const std::string& icon)
 {
-    printf("Wanna to create shortcut for:  %s, named:  %s", ptchExecutableFileName.c_str(), ptchShortcutName.c_str());
+    printf("Wanna to create shortcut for:  %s, named:  %s", ExecutableFileName.c_str(), ShortcutName.c_str());
 }
 double directory_delete(const char* pathname)
 {
@@ -151,4 +156,5 @@ void showError(const char* error)
 {
     printf("%s", error);
 }
+
 #endif
