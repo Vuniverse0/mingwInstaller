@@ -1,7 +1,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #include <fstream>
-#include <shlobj_core.h>
+#include <shlobj.h>
 #include <string>
 #include <KnownFolders.h>
 #include <cwchar>
