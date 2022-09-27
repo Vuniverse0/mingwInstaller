@@ -43,7 +43,7 @@ std::wstring getProgramsFolder();
     HRESULT hres = CoInitialize(NULL);
 
     if (!SUCCEEDED(hres))
-        throw hres;
+        printf("Eror 46 chortcut");
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
 
@@ -74,8 +74,8 @@ std::wstring getProgramsFolder();
             // Save the link by calling IPersistFile::Save.
             hres = ppf->Save(wsz, TRUE);
             if (!SUCCEEDED(hres))
-                throw hres;
-            
+                printf("Eror 77 chortcut");
+
             ppf->Release();
         }
         psl->Release();
@@ -97,8 +97,8 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
     std::string l = converter.to_bytes( location );
     std::string Filef = file;
     std::string work = workPath;
-    std::replace(Filef.begin(), Filef.end(), '/', '\\');
-    std::replace(work.begin(), work.end(), '/', '\\');
+    std::replace(Filef.begin(), Filef.end(), '\\', '/');
+    std::replace(work.begin(), work.end(), '\\', '/');
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  work path: %s,\n description: %s\n\n",
            Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
     CreateLink(Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
