@@ -117,8 +117,8 @@ std::wstring getProgramsFolder();
 
                 hres = _makepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
                       "MinGW-W64", "lnk" );
-
-                hres = ppf->Save(wsz, TRUE);
+                std::wstring sz(wsz);
+                hres = ppf->Save(sz.c_str(), TRUE);
                 ppf->Release();
             }
             psl->Release();
