@@ -97,6 +97,8 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
     std::wstring_convert<convert_type, wchar_t> converter;
     std::string l = converter.to_bytes( location );
 
+    printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  work path: %s,\n description: %s\n\n",
+           file.c_str(), l.c_str(), workPath.c_str(), description.c_str());
     CreateLink(file.c_str(), l.c_str(), workPath.c_str(), description.c_str());
 }
 
