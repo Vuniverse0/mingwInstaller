@@ -142,8 +142,8 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
 
     std::string Filef = file;
     std::string work = workPath;
-    std::replace(Filef.begin(), Filef.end(), '\\', '/');
-    std::replace(work.begin(), work.end(), '\\', '/');
+    std::replace(Filef.begin(), Filef.end(), '/', '\\');
+    //std::replace(work.begin(), work.end(), '\\', '/');
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  work path: %s,\n description: %s\n\n",
            Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
     CreateLink(Filef.c_str(), location.c_str(), work.c_str(), description.c_str());
