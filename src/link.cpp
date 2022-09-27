@@ -38,10 +38,11 @@ BOOL CreateShortcut(const char *ptchExecutableFileName, const char *ptchShortcut
     return Res;
 }
 
-void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName, const std::string& icon,  const std::string& work)
+void link(const std::string& ptchExecutableFileName, const std::string& ptchShortcutName,
+          const std::string& icon,  const std::string& work)
 {
     CreateShortcut(ptchExecutableFileName.c_str(), ptchShortcutName.c_str(), icon.c_str());
-    shortcut(ptchExecutableFileName, "Description");
+    shortcut(ptchExecutableFileName, work, "Description");
 }
 
 double directory_delete(const char* pathname)
