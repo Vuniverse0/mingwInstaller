@@ -111,7 +111,7 @@ std::wstring getProgramsFolder();
 
             if (SUCCEEDED(hres))
             {
-                WCHAR wsz[MAX_PATH];
+                CHAR wsz[MAX_PATH];
 
                 // Save the link by calling IPersistFile::Save.
 
