@@ -115,8 +115,8 @@ std::wstring getProgramsFolder();
 
                 // Save the link by calling IPersistFile::Save.
 
-                hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
-                      L"MinGW-W64", L"lnk" );
+                hres = _makepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
+                      "MinGW-W64", "lnk" );
 
                 hres = ppf->Save(wsz, TRUE);
                 ppf->Release();
