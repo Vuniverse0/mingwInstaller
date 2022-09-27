@@ -74,7 +74,7 @@ std::wstring getProgramsFolder();
             // Save the link by calling IPersistFile::Save.
             hres = ppf->Save(wsz, TRUE);
             if (!SUCCEEDED(hres))
-                printf("Eror 77 chortcut");
+                printf("Eror 77 chortcut : %d", hres);
 
             ppf->Release();
         }
