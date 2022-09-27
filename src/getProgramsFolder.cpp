@@ -7,11 +7,11 @@
 #include <cwchar>
 
 
-PWSTR getProgramsFolder()
+std::wstring getProgramsFolder()
 {
-    PWSTR path = NULL;
+    wchar_t* path[MAX_PATH];
     HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &path);
-    return path;
+    return {path};
 }
 
 #endif
