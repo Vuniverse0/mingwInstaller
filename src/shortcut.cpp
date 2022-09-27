@@ -132,7 +132,7 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
     //std::wstring wfile = std::wstring(file.begin(), file.end());
     //std::wstring wdescription = std::wstring(description.begin(), description.end());
     std::wstring location = getProgramsFolder();
-    location+=L"\\mingw\\MinGW-W64.lnk";
+    location+=L"\\mingw";
 
 
     using convert_type = std::codecvt_utf8<wchar_t>;
