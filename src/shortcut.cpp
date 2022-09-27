@@ -39,7 +39,7 @@ std::wstring getProgramsFolder();
 
 /*============================================================================*/
 {
-    IShellLink* psl = NULL;
+    /*IShellLink* psl = NULL;
     HRESULT hres = CoInitialize(NULL);
 
     if (!SUCCEEDED(hres))
@@ -56,6 +56,7 @@ std::wstring getProgramsFolder();
         psl->SetPath(lpszPathObj);
         psl->SetDescription(lpszDesc);
         psl->SetWorkingDirectory(lpszPath);
+        //psl->SetIconLocation(lpszPathObj, 0);
 
         // Query IShellLink for the IPersistFile interface, used for saving the
         // shortcut in persistent storage.
@@ -83,6 +84,47 @@ std::wstring getProgramsFolder();
 
     CoUninitialize();
 
+    return hres; */
+
+    CoInitializeEx( NULL, 0 );
+    HRESULT hres = 0;
+    IShellLink* psl;
+
+    if (SUCCEEDED(hres))
+    {
+
+        // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
+        // has already been called.
+        hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_ALL, IID_IShellLink, (LPVOID*)&psl); //CLSCTX_ALL CLSCTX_INPROC_SERVER (void**)&psl (LPVOID*)&psl
+        if (SUCCEEDED(hres))
+        {
+            IPersistFile* ppf;
+
+            // Set the path to the shortcut target and add the description.
+            psl->SetPath(lpszPathObj);
+            psl->SetDescription(lpszDesc);
+            //psl->SetIconLocation(mediaMaestroLocation, 0);
+
+            // Query IShellLink for the IPersistFile interface, used for saving the
+            // shortcut in persistent storage.
+            hres = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf); //(void**)&psl (LPVOID*)&ppf
+
+            if (SUCCEEDED(hres))
+            {
+                WCHAR wsz[MAX_PATH];
+
+                // Save the link by calling IPersistFile::Save.
+
+                hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
+                      L"MinGW-W64", L"lnk" );
+
+                hres = ppf->Save(wsz, TRUE);
+                ppf->Release();
+            }
+            psl->Release();
+        }
+    }
+    CoUninitialize();
     return hres;
 }
 void shortcut(const std::string& file,  const std::string& workPath, const std::string& description)
