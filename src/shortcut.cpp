@@ -43,7 +43,7 @@ std::wstring getProgramsFolder();
     HRESULT hres = CoInitialize(NULL);
 
     if (!SUCCEEDED(hres))
-        LOGASSERT(FALSE);
+        C_ASSERT(FALSE);
 
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
@@ -75,7 +75,7 @@ std::wstring getProgramsFolder();
             // Save the link by calling IPersistFile::Save.
             hres = ppf->Save(wsz, TRUE);
             if (!SUCCEEDED(hres))
-                LOGASSERT(FALSE);
+                C_ASSERT(FALSE);
 
             ppf->Release();
         }
