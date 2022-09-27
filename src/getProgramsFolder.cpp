@@ -9,9 +9,10 @@
 
 std::wstring getProgramsFolder()
 {
-    wchar_t* path[MAX_PATH];
-    HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &path);
-    return {path};
+    wchar_t path[MAX_PATH];
+    wchar_t* p = path;
+    HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &p);
+    return std::wstring{path};
 }
 
 #endif
