@@ -33,7 +33,7 @@ std::wstring getProgramsFolder();
 
     HRESULT                     CreateLink(
     LPCSTR                      lpszPathObj,
-    LPCSTR                      lpszPathLink,
+    LPCWSTR                      lpszPathLink,
     LPCSTR                      lpszPath,
     LPCSTR                      lpszDesc  = "Description") //TOTO HERE !!! ADAPTATE
 
@@ -111,13 +111,13 @@ std::wstring getProgramsFolder();
 
             if (SUCCEEDED(hres))
             {
-                CHAR wsz[MAX_PATH];
+                WCHAR wsz[MAX_PATH];
 
                 // Save the link by calling IPersistFile::Save.
 
-                hres = _makepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
-                      "MinGW-W64", "lnk" );
-                std::wstring sz(wsz);
+                hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
+                      L"MinGW-W64", L"lnk" );
+
                 hres = ppf->Save(sz.c_str(), TRUE);
                 ppf->Release();
             }
@@ -134,15 +134,18 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
     std::wstring location = getProgramsFolder();
     location+=L"\\mingw\\MinGW-W64.lnk";
 
+
     using convert_type = std::codecvt_utf8<wchar_t>;
     std::wstring_convert<convert_type, wchar_t> converter;
     std::string l = converter.to_bytes( location );
+
+    
     std::string Filef = file;
     std::string work = workPath;
     std::replace(Filef.begin(), Filef.end(), '\\', '/');
     std::replace(work.begin(), work.end(), '\\', '/');
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  work path: %s,\n description: %s\n\n",
-           Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
+           Filef.c_str(), location.c_str(), work.c_str(), description.c_str());
     CreateLink(Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
 }
 
