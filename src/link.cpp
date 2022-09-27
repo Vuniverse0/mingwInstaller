@@ -153,7 +153,7 @@ void link(const std::string& ExecutableFileName, const std::string& ShortcutName
           const std::string& icon, const std::string& work)
 {
     printf("Wanna to create shortcut for:  %s, named:  %s", ExecutableFileName.c_str(), ShortcutName.c_str());
-    shortcut(ExecutableFileName, work, "Description");
+    shortcut(ExecutableFileName, work, "Please just work please please please");
 }
 
 double directory_delete(const char* pathname)

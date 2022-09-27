@@ -91,16 +91,18 @@ void shortcut(const std::string& file,  const std::string& workPath, const std::
     //std::wstring wfile = std::wstring(file.begin(), file.end());
     //std::wstring wdescription = std::wstring(description.begin(), description.end());
     std::wstring location = getProgramsFolder();
-    location+=L"\\MinGW-W64.lnk";
+    location+=L"\\mingw\\MinGW-W64.lnk";
 
     using convert_type = std::codecvt_utf8<wchar_t>;
     std::wstring_convert<convert_type, wchar_t> converter;
     std::string l = converter.to_bytes( location );
     std::string Filef = file;
-    std::replace(Filef.begin(),Filef.end(), '/', '\\');
+    std::string work = workPath;
+    std::replace(Filef.begin(), Filef.end(), '/', '\\');
+    std::replace(work.begin(), work.end(), '/', '\\');
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  work path: %s,\n description: %s\n\n",
-           Filef.c_str(), l.c_str(), workPath.c_str(), description.c_str());
-    CreateLink(Filef.c_str(), l.c_str(), workPath.c_str(), description.c_str());
+           Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
+    CreateLink(Filef.c_str(), l.c_str(), work.c_str(), description.c_str());
 }
 
 #else
