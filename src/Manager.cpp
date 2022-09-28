@@ -197,18 +197,19 @@ void Manager::unpack()
 
     printf("\nFile %s\n", file.c_str());
     printf("Dir %s\n", installDir.c_str());
-    printf("Cur %s\n", std::filesystem::current_path().c_str());
+    printf("Cur %s\n", std::filesystem::current_path().string().c_str());
 
     if(res){
         if(exists(mingw))
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
         if(res == 1488)
             showError("try set another folder, acccess denied(maybe)");
+        showError("Unpack error");
         return ;
     }
 
     status = Status::Done;
-    
+
     Fl::repeat_timeout(1.0 / 60.0, Timer_CB);
 }
 

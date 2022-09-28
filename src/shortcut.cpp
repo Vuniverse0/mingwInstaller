@@ -131,12 +131,10 @@ std::size_t directory_delete(std::string pathname)
 
 void showError(const char* error)
 {
-     int msgboxID = MessageBox(
-    NULL,
-    "Check internet conection. Details?",
-    "Problem",
-    MB_YESNO
-    );
+    printf("%s", error);
+
+    int msgboxID = MessageBox(NULL, "Check internet conection. Details?", "Problem", MB_YESNO);
+
     if(msgboxID == IDYES){
         MessageBox(
         NULL,
