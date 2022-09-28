@@ -3,7 +3,7 @@
 #include <filesystem>
 
 
-void shortcut(const std::string& file,  const std::string& workPath, const std::string& description);
+void shortcut(const std::string& file,  const std::string& icon, const std::string& description);
 
 #ifdef WIN32
 #include <windows.h>

@@ -78,7 +78,7 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
     CoUninitialize();
     return hres;
 }
-void shortcut(const std::string& filePath, const std::string& description, const std::string& picturePath)
+void shortcut(const std::string& filePath, const std::string& picturePath, const std::string& description)
 {
     //std::wstring wfile = std::wstring(file.begin(), file.end());
     //std::wstring wdescription = std::wstring(description.begin(), description.end());
@@ -109,7 +109,7 @@ void shortcut(const std::string& filePath, const std::string& description, const
 
 #else
 
-void shortcut(const std::string& file,  const std::string& workPath, const std::string& description)
+void shortcut(const std::string& file,  const std::string& icon, const std::string& description)
 {
     printf("File to startup menu:  %s", file.c_str());
 }
