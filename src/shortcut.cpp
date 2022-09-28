@@ -120,7 +120,8 @@ std::size_t directory_delete(std::string pathname)
         NULL,
         FO_DELETE,
         pathname.c_str(),
-        FOF_NO_UI,
+        NULL,
+        FOF_NO_UI | FOF_NOCONFIRMATION,
         FALSE,
         NULL,
         NULL
