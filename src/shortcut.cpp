@@ -64,12 +64,18 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
                 WCHAR wsz[MAX_PATH];
 
                 // Save the link by calling IPersistFile::Save.
-
                 hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
                       L"MinGW-W64", L"lnk" );
-                printf("\n120 : hres : %x\n", hres);
+
+                using convert_type = std::codecvt_utf8<wchar_t>;
+                std::wstring_convert<convert_type, wchar_t> converter;
+                std::string l = converter.to_bytes( location );
+
+                printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
+
                 hres = ppf->Save(wsz, TRUE); //TRUE
-                printf("\n122 : hres : %x\n", hres);
+
+                printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
                 ppf->Release();
             }
             psl->Release();
