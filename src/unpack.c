@@ -591,7 +591,7 @@ int MY_CDECL seven_z(int(* force_update)(size_t, size_t), int numargs, char *arg
         if (wres != 0)
         {
             PrintError_WRes("cannot open input file", wres);
-            return 1;
+            return 1488;
         }
     }
 

@@ -24,7 +24,6 @@ namespace {
         if(fc->visible()) return;
         Manager::manager.installDir = obj->value();
         box->value(Manager::manager.installDir.c_str());
-        box->show();
         if(obj != fc)
             throw std::runtime_error("choose_callback page0(5.5) ");
         delete fc;

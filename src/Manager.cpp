@@ -181,15 +181,21 @@ void Manager::unpack()
 {
     std::string file = (std::filesystem::temp_directory_path() / getCandidate().name).string();
     const char* args[4]{"seven_z", "x", file.c_str()};
+    printf("File %s\n", file.c_str());
+    printf("Dir %s\n", installDir.c_str());
     std::filesystem::current_path(installDir);
+    printf("Cur %s\n", std::filesystem::current_path().c_str());
     std::filesystem::path mingw(std::filesystem::current_path()/
     folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
     if(exists(mingw))
         directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
     Fl::remove_timeout(Timer_CB);
-    if(seven_z(force_update, 3, args)){
+    auto res = seven_z(force_update, 3, args);
+    if(res){
         if(exists(mingw))
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
+        if(res == 1488)
+            showError("try set another folder, acccess denied(maybe)");
         return ;
     }
     status = Status::Done;
