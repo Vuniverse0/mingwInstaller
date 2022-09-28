@@ -30,7 +30,7 @@ namespace {
         fc = nullptr;
     }
 
-    void call_back_page_1(Fl_Widget*, void*)
+    void call_back_page_6(Fl_Widget*, void*)
     {
         if (!fc) {
             fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
@@ -55,7 +55,7 @@ void page_6()
     back->callback(back_cb);
 
     auto *set_dir = new Fl_Button(500 + png_size, 180, 100, 25, "Choose");
-    set_dir->callback(call_back_page_1);
+    set_dir->callback(call_back_page_6);
 
     box = new Fl_Multiline_Output(100 + png_size, 150, 500, 25,"Install in: ");
     Manager::manager.installDir = home();
@@ -64,7 +64,7 @@ void page_6()
     auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
     out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
-
+    //TODO add check for Manager::manager.desktopShortcut;
     Manager::logo();
 
     g->end();

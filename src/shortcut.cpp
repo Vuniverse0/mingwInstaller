@@ -153,7 +153,7 @@ void showError(const char* error)
 void shortcut(std::string filePath, std::string picturePath, const std::string& name, std::size_t destination)
 {
 
-    printf("\n\nWanna to create shortcut for:  %s,\n to:  ?,\n  picture: %s,\n description: %s\n\n",
+    printf("\n\nWanna to create shortcut for:  %s,\n to:  ?,\n  picture: %sn\n",
            filePath.c_str(), picturePath.c_str());
 }
 
