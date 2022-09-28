@@ -69,7 +69,7 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
 
                 using convert_type = std::codecvt_utf8<wchar_t>;
                 std::wstring_convert<convert_type, wchar_t> converter;
-                std::string l = converter.to_bytes( location );
+                std::string l = converter.to_bytes( wsz );
 
                 printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
 
@@ -108,7 +108,7 @@ void shortcut(const std::string& filePath, const std::string& picturePath, const
     //HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink, LPCSTR lpszDesc, LPCSTR lpszPicture);
 
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  picture: %s,\n description: %s\n\n",
-           Filef.c_str(), l.c_str(), Picf.c_str(), description.c_str());
+           Filef.c_str(), location.c_str(), Picf.c_str(), description.c_str());
 
     CreateLink(Filef.c_str(), location.c_str(), description.c_str(), Picf.c_str());
 }
