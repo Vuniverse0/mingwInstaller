@@ -338,12 +338,12 @@ void Manager::extractEnd()
         page7_set(Page7state::done);
         shortcut(installDir + createBat(),
                  installDir + createIcon(),
-                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32.url" : "MinGW-W64.url"),
+                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32" : "MinGW-W64"),
                  0);
         if(desktopShortcut) //TODO add switch to IDE
             shortcut(installDir + createBat(),
                      installDir + createIcon(),
-                     (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32.url" : "MinGW-W64.url"),
+                     (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32" : "MinGW-W64"),
                      1);
     }else
         throw std::runtime_error("extractEnd: invalid status");
