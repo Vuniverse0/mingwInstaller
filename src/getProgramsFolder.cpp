@@ -10,7 +10,7 @@
 std::wstring getProgramsFolder()
 {
     wchar_t* p = nullptr;
-    HRESULT hres = SHGetKnownFolderPath(FOLDERID_ApplicationShortcuts, 0, NULL, &p);
+    HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &p);
     return std::wstring{p};
 }
 
