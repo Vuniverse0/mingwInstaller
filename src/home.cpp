@@ -2,7 +2,7 @@
 
 #ifdef WIN32
 #include <shlobj.h>
-
+#include <algorithm>
 #include <stdexcept>
 
 
