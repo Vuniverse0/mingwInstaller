@@ -8,15 +8,14 @@
 
 std::string home()
 {
-    LPSTR path = new char[MAX_PATH];
+    LPSTR path[MAX_PATH];
     if(SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_PROFILE, NULL, 0, path))){
         std::string res {path};
-        delete path;
+        res+="/";
+        std::replace(res.begin(), res.end(), '\\', '/');
         return res;
-    }else{
-        delete path;
-        throw std::runtime_error("cant get home path");
     }
+    throw std::runtime_error("cant get home path");
 }
 
 #else

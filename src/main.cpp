@@ -1,3 +1,6 @@
+const char * const version = "1.1.0";
+
+
 #include "pages.hpp"
 
 #include "Manager.hpp"
@@ -38,6 +41,10 @@ void page_5();  ///revision
 void page_7();  ///download
 
 int main(int argc, char **argv) try {
+    if(argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "v"))){
+        printf("version: %s", version);
+    }
+
     Fl::scheme("gtk+");
 
     G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");

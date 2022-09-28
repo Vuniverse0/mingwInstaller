@@ -59,10 +59,8 @@ void page_6()
     set_dir->callback(call_back_page_1);
 
     box = new Fl_Multiline_Output(100 + png_size, 150, 500, 25,"Install in: ");
-    //Manager::manager.installDir = home();
-    //std::replace(Manager::manager.installDir.begin(), Manager::manager.installDir.end(), '\\', '/');
-    //Manager::manager.installDir += '/';
-    //box->value(Manager::manager.installDir.c_str());
+    Manager::manager.installDir = home();
+    box->value(Manager::manager.installDir.c_str());
 
     auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
     out->labelsize(45);
