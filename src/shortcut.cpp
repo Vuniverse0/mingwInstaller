@@ -10,8 +10,11 @@
 #include "objidl.h"
 #include "shlguid.h"
 #include "shobjidl.h"
-#include <cwchar>
+#include <Windows.h>
+#include <fstream>
+#include <shlobj.h>
 #include <KnownFolders.h>
+#include <cwchar>
 
 /*============================================================================*/
 
