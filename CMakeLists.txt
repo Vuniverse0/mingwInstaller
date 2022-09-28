@@ -22,7 +22,6 @@ add_executable(mingwInstaller
         src/page7.cpp
 
         src/logo.cpp
-        src/link.cpp
         src/icon.cpp
 
         src/lzma2201/C/Bcj2.c
@@ -46,7 +45,7 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zBuf2.c
         src/lzma2201/C/7zDec.c
         src/lzma2201/C/7zFile.c
-        src/lzma2201/C/7zStream.c src/home.cpp src/home.hpp src/shortcut.cpp src/getProgramsFolder.cpp)
+        src/lzma2201/C/7zStream.c src/home.cpp src/home.hpp src/shortcut.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fltk fltk_images curl)
 

@@ -9,9 +9,8 @@
 #include <FL/Fl_Box.H>
 
 #include "curl_tools.hpp"
-#include "logo.hpp"
 #include "icon.hpp"
-#include "link.hpp"
+#include "logo.hpp"
 
 #include "flatjson.hpp"
 
@@ -33,6 +32,10 @@ enum class Page7state{download, downloading, extract, extracting, done, error };
 void page7_set(Page7state state);
 
 void auto_extract();
+
+void shortcut(std::string filePath, std::string picturePath, const std::string& name, std::size_t destination);
+
+std::size_t directory_delete(std::string pathname);
 
 //Curl progress
 int progress_func(void*, double TotalToDownload, double NowDownloaded, double, double)
@@ -327,8 +330,15 @@ void Manager::extractEnd()
         status = Status::Downloaded;
     }else if(status == Status::Done) {
         page7_set(Page7state::done);
-        link(installDir + createBat(), installDir + (downloadCandidate.architecture == Arcs::i686 ?
-        "MinGW-W32.url" : "MinGW-W64.url"), installDir + createIcon());
+        shortcut(installDir + createBat(),
+                 installDir + createIcon(),
+                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32.url" : "MinGW-W64.url"),
+                 0);
+        if(desktopShortcut) //TODO add switch to IDE
+            shortcut(installDir + createBat(),
+                     installDir + createIcon(),
+                     (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32.url" : "MinGW-W64.url"),
+                     1);
     }else
         throw std::runtime_error("extractEnd: invalid status");
 }

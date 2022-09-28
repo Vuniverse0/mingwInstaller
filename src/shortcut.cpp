@@ -1,8 +1,9 @@
 #include <string>
-#include <locale>
-#include <codecvt>
 #include <algorithm>
+#include <filesystem>
+
 #ifdef WIN32
+
 #include "windows.h"
 #include "winnls.h"
 #include "shobjidl.h"
@@ -10,11 +11,13 @@
 #include "objidl.h"
 #include "shlguid.h"
 #include "shobjidl.h"
+#include "shellapi.h"
 #include <Windows.h>
 #include <fstream>
 #include <shlobj.h>
 #include <KnownFolders.h>
 #include <cwchar>
+
 
 /*============================================================================*/
 
@@ -34,7 +37,7 @@
 //lpszPicture   - picture of shortcut
 
 HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
-                   LPCSTR lpszDesc, LPCSTR lpszPicture)
+                   LPCSTR lpszDesc, LPCSTR lpszPicture, LPCWSTR name)
 {
     CoInitializeEx( NULL, 0 );
     HRESULT hres = 0;
@@ -65,17 +68,17 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
 
                 // Save the link by calling IPersistFile::Save.
                 hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
-                      L"MinGW-W64", L"lnk" );
+                      name, L"lnk" );
 
                 using convert_type = std::codecvt_utf8<wchar_t>;
                 std::wstring_convert<convert_type, wchar_t> converter;
                 std::string l = converter.to_bytes( wsz );
 
-                printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
+                //printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
 
-                hres = ppf->Save(wsz, TRUE); //TRUE
+                hres = ppf->Save(wsz, TRUE);
 
-                printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
+                //printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
                 ppf->Release();
             }
             psl->Release();
@@ -84,40 +87,84 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
     CoUninitialize();
     return hres;
 }
-void shortcut(const std::string& filePath, const std::string& picturePath, const std::string& description)
+
+//destination:
+// 0 - FOLDERID_Programs
+// 1 - FOLDERID_Desktop
+void shortcut(std::string filePath, std::string picturePath, const std::string& name, std::size_t destination)
 {
-    //std::wstring wfile = std::wstring(file.begin(), file.end());
-    //std::wstring wdescription = std::wstring(description.begin(), description.end());
     wchar_t* p = nullptr;
-    //HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
-    HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
+
+    if(destination == 0)
+        HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
+    else if(destination == 1)
+        HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
+
     std::wstring location = p;
-    //FOLDERID_CommonStartup //
-    // FOLDERID_CommonPrograms//
-    // FOLDERID_CommonStartMenu //
 
-    //location+=L"\\mingw";
+    std::wstring n{name.begin(), name.end()};
 
-    using convert_type = std::codecvt_utf8<wchar_t>;
-    std::wstring_convert<convert_type, wchar_t> converter;
-    std::string l = converter.to_bytes( location );
+    std::replace(picturePath.begin(), picturePath.end(), '/', '\\');
+    std::replace(filePath.begin(), filePath.end(), '/', '\\');
 
-    std::string Filef = filePath, Picf = picturePath;
-    std::replace(Filef.begin(), Filef.end(), '/', '\\');
-    std::replace(Picf.begin(), Picf.end(), '/', '\\');
-    //HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink, LPCSTR lpszDesc, LPCSTR lpszPicture);
+    printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  picture: %s,\n\n",
+           filePath.c_str(), location.c_str(), picturePath.c_str());
 
-    printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  picture: %s,\n description: %s\n\n",
-           Filef.c_str(), location.c_str(), Picf.c_str(), description.c_str());
+    CreateLink(filePath.c_str(), location.c_str(), "Compiler", picturePath.c_str(), n.c_str());
+}
 
-    CreateLink(Filef.c_str(), location.c_str(), description.c_str(), Picf.c_str());
+std::size_t directory_delete(std::string pathname)
+{
+    pathname += "\0\0";
+    SHFILEOPSTRUCTA file{
+        NULL,
+        FO_DELETE,
+        pathname.c_str(),
+        FOF_NO_UI,
+        FALSE,
+        NULL,
+        NULL
+        };
+    return SHFileOperationA(&file);
+}
+
+void showError(const char* error)
+{
+     int msgboxID = MessageBox(
+    NULL,
+    "Check internet conection. Details?",
+    "Problem",
+    MB_YESNO
+    );
+    if(msgboxID == IDYES){
+        MessageBox(
+        NULL,
+        error,
+        "Problem",
+        MB_OK
+        );
+    }
 }
 
 #else
 
-void shortcut(const std::string& file,  const std::string& icon, const std::string& description)
+//destination:
+// 0 - FOLDERID_Programs
+// 1 - FOLDERID_Desktop
+void shortcut(std::string filePath, std::string picturePath, const std::string& name, std::size_t destination)
 {
-    printf("File to startup menu:  %s", file.c_str());
+
+    printf("\n\nWanna to create shortcut for:  %s,\n to:  ?,\n  picture: %s,\n description: %s\n\n",
+           filePath.c_str(), picturePath.c_str());
 }
 
+std::size_t directory_delete(std::string pathname)
+{
+    return std::filesystem::remove_all(pathname);
+}
+
+void showError(const char* error)
+{
+    printf("%s", error);
+}
 #endif

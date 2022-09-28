@@ -24,4 +24,6 @@ enum class ExcRs{ sjlj, dwarf, seh, error};
 enum class MgRs{ win32, posix, error};
 enum class Arcs{ i686, x86_64, error};
 
+void showError(const char* error);
+
 #endif //MINGWINSTALLER_PAGES_HPP

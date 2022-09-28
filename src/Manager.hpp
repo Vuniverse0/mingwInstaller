@@ -22,12 +22,11 @@ public:
     [[nodiscard]] int extractCancel() const;
     void cancel();
 
-
     static Fl_RGB_Image* logo(bool box = true);
 
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
-
+    bool desktopShortcut = false;
 private:
     const std::array<const std::string, 2> headers_strings{
             "Authorization: Bearer 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",
