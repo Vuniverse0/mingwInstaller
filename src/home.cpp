@@ -8,7 +8,8 @@
 
 std::string home()
 {
-    LPSTR path[MAX_PATH];
+    char p[MAX_PATH];
+    LPSTR path = p;
     if(SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_PROFILE, NULL, 0, path))){
         std::string res {path};
         res+="/";
