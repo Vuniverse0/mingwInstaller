@@ -84,11 +84,11 @@ void shortcut(const std::string& filePath, const std::string& description, const
     //std::wstring wdescription = std::wstring(description.begin(), description.end());
     wchar_t* p = nullptr;
     //HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
-    HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonStartMenu, 0, NULL, &p);
+    HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonStartup, 0, NULL, &p);
     std::wstring location = p;
-    //FOLDERID_CommonStartup
+    //FOLDERID_CommonStartup //
     // FOLDERID_CommonPrograms
-    // FOLDERID_CommonStartMenu
+    // FOLDERID_CommonStartMenu //
 
     //location+=L"\\mingw";
 
