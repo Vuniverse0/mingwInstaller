@@ -66,7 +66,6 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
             {
                 WCHAR wsz[MAX_PATH];
 
-                // Save the link by calling IPersistFile::Save.
                 hres = _wmakepath_s( wsz, _MAX_PATH, NULL, lpszPathLink,
                       name, L"lnk" );
 
@@ -75,7 +74,7 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
                 std::string l = converter.to_bytes( wsz );
 
                 //printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
-
+                // Save the link by calling IPersistFile::Save.
                 hres = ppf->Save(wsz, TRUE);
 
                 //printf("\n : hres : %x\n, wsz: %s\n", hres, l.c_str());
@@ -96,10 +95,11 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
     wchar_t* p = nullptr;
     std::wstring location;
     if(destination == 0){
-        HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
+      HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
         location = p;
         location += L"\\mingw";
-        CreateDirectoryW(location.c_str(), nullptr);
+        std::wstring path = location;
+        CreateDirectoryW(path.c_str(), nullptr);
     }else if(destination == 1){
         HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
         location = p;
