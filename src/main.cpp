@@ -45,6 +45,9 @@ int main(int argc, char **argv) try {
         return 0;
     }
 
+#ifndef NDEBUG
+    return 0;
+#endif
     Fl::scheme("gtk+");
 
     G_win = new Fl_Window(400, 300, width, height, "MinGW-W64 Installer");
