@@ -55,5 +55,6 @@ IF (WIN32)
     add_definitions(-DNGHTTP2_STATICLIB -DCURL_STATICLIB -DNO_SSL_DL)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             png z nghttp2 ssl crypto psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon
-            crypt32 ws2_32 wldap32 user32.so shell32.so comctl32.so iconv.so unistring.so -s -mwindows -static -OS)
+            crypt32 ws2_32 wldap32 -s -mwindows -static -OS)
+    add_link_options(user32 shell32 comctl32 iconv unistring -s)
 ENDIF()
