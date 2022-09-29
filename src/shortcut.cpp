@@ -100,6 +100,7 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
         location = p;
         location += L"mingw\\";
         CreateDirectoryW(location.c_str(), nullptr);
+        printf("\nFolder in statrup: %s\n", location.c_str());
     }else if(destination == 1){
         HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
         location = p;
