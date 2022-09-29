@@ -1,2 +1,0 @@
-
-#define MINGW_W64_INSTALLER_VERSION "1.1.2"

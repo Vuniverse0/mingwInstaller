@@ -25,7 +25,6 @@ add_executable(mingwInstaller
         src/icon.cpp
         src/home.cpp
         src/shortcut.cpp
-        src/version.cpp
 
         src/lzma2201/C/Bcj2.c
         src/lzma2201/C/Bra.c
