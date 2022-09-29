@@ -15,7 +15,7 @@ void page_about()
     auto *g = new Fl_Group(0, 0, width, height);
     auto *text = new Fl_Help_View(50 + png_size, 1, 600, 275);
     text->value("<h1>About</h1> <p>Version: "
-                 MINGW_W64_INSTALLER_VERSION
+                MINGW_W64_INSTALLER_VERSION
                 "</p><p>This installer was developed by <a href=\"https://github.com/Vuniverse0/\">Vuniverse</a>."
                 "</p> <p> It is open <a href=\"https://github.com/Vuniverse0/mingwInstaller/\">source</a>."
                 "<p><a href=\"https://github.com/Vuniverse0/mingwInstaller/issues\">Report a bug or an error.</a></p>"
