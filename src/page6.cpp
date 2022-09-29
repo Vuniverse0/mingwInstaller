@@ -8,8 +8,9 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
-#include "Fl/Fl_File_Chooser.H"
-#include "Fl/Fl_Multiline_Output.H"
+#include <FL/Fl_Check_Button.H>
+#include <Fl/Fl_File_Chooser.H>
+#include <Fl/Fl_Multiline_Output.H>
 
 #include <algorithm>
 
@@ -39,6 +40,12 @@ namespace {
         }else if(!fc->visible())
             fc->show();
     }
+
+    void check_button_cb(Fl_Widget *button, void*)
+    {
+        Manager::manager.desktopShortcut = ((Fl_Check_Button*) button)->value();
+        printf("\n Manager desctop: %s\n", Manager::manager.desktopShortcut ? "true" : "false");
+    }
 }
 
 void auto_download_cb(Fl_Widget*, void*);
@@ -65,6 +72,10 @@ void page_6()
     out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
     //TODO add check for Manager::manager.desktopShortcut;
+    auto check_button = new Fl_Check_Button(100 + png_size, 220, 500, 25,"Create shortcut on Desktop");
+    check_button->callback(check_button_cb);
+    check_button->labelsize(20);
+
     Manager::logo();
 
     g->end();
