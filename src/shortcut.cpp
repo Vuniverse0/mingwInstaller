@@ -100,11 +100,14 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
         location = p;
         location += L"mingw\\";
         CreateDirectoryW(location.c_str(), nullptr);
-        printf("\nFolder in statrup: %s\n", location.c_str());
     }else if(destination == 1){
         HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
         location = p;
     }
+    using convert_type = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_type, wchar_t> converter;
+    std::string l = converter.to_bytes( location.c_str() );
+    printf("\nFolder for shotcut: %s\n", l.c_str());
 
     std::wstring n{name.begin(), name.end()};
 
@@ -112,7 +115,7 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
     std::replace(filePath.begin(), filePath.end(), '/', '\\');
 
     printf("\n\nWanna to create shortcut for:  %s,\n to:  %s,\n  picture: %s,\n\n",
-           filePath.c_str(), location.c_str(), picturePath.c_str());
+           filePath.c_str(), l.c_str(), picturePath.c_str());
 
     CreateLink(filePath.c_str(), location.c_str(), "Compiler", picturePath.c_str(), n.c_str());
 }

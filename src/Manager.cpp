@@ -203,7 +203,7 @@ void Manager::unpack()
         if(exists(mingw))
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
         if(res == 1488)
-            showError("try set another folder, acccess denied(maybe)");
+            showError("try set another folder or run installer again, acccess denied(maybe)");
         showError("Unpack error");
         return ;
     }
@@ -356,8 +356,10 @@ void Manager::extractEnd()
                      installDir + createIcon(),
                      (downloadCandidate.architecture == Arcs::i686 ? "MinGWx32" : "MinGWx64"),
                      1);
-    }else
+    }else{
+        showError("extractEnd: invalid status");
         throw std::runtime_error("extractEnd: invalid status");
+    }
 }
 
 void Manager::cancel()
