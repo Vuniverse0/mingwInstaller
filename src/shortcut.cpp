@@ -95,9 +95,9 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
     wchar_t* p = nullptr;
     std::wstring location;
     if(destination == 0){
-      HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
+      HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &p);//FOLDERID_Programs
         location = p;
-        location += L"\\mingw";
+        location += L"\\mingw\\";
         std::wstring path = location;
         SHCreateDirectory(nullptr, path.c_str());
     }else if(destination == 1){
