@@ -1,1 +1,2 @@
-extern const char * const version = "1.1.1";
+
+#define MINGW_W64_INSTALLER_VERSION "1.1.2"

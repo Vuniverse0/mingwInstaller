@@ -1,5 +1,4 @@
-extern const char * const version;
-
+#include "version.cpp"
 
 #include "pages.hpp"
 
@@ -42,7 +41,7 @@ void page_7();  ///download
 
 int main(int argc, char **argv) try {
     if(argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "v"))){
-        printf("version: %s", version);
+        printf("version: %s", MINGW_W64_INSTALLER_VERSION);
         return 0;
     }
 
