@@ -87,10 +87,14 @@ const std::vector<BuildInfo>& Manager::getInfo()
             curl_easy_cleanup(curl);
 	        if(res)
                 showError(error);
-        }else
+        }else {
+            showError("Curl corrupted: init error");
             throw std::runtime_error("curl in init error");
-	    if(readBuffer.empty())
-	        throw std::runtime_error("curl after init error");
+        }
+	    if(readBuffer.empty()){
+            showError("Curl error");
+            throw std::runtime_error("curl after init error");
+        }
 
         fillBuffer(buffer, readBuffer); ///Parse
 
@@ -171,8 +175,10 @@ const BuildInfo &Manager::getCandidate()
             && member.multithreading == downloadCandidate.multithreading
             && member.exception == downloadCandidate.exception;
         });
-    if(it == getInfo().end())
+    if(it == getInfo().end()){
+        showError("Logical error");
         throw std::runtime_error("Can't find build");
+    }
     last_build = &(*it);
     return *it;
 }
@@ -204,7 +210,7 @@ void Manager::unpack()
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
         if(res == 1488)
             showError("try set another folder or run installer again, acccess denied(maybe)");
-        showError("Unpack error");
+        showError("Unpack error, try run installer again");
         return ;
     }
 
@@ -231,6 +237,7 @@ void Manager::Timer_CB(void *)
             Manager::manager.extractEnd();
             break;
         case Status::Error:
+            showError("Logical error: state failed");
             throw std::runtime_error("Error status in TimerCb");
     }
 }
@@ -242,7 +249,10 @@ void Manager::download()
     http_handle = curl_easy_init();
     auto& candidate =  Manager::manager.getCandidate();
 
-    if(!http_handle) throw std::runtime_error("Curl corrupted");
+    if(!http_handle) {
+        showError("Curl corrupted");
+        throw std::runtime_error("Curl corrupted");
+    }
 
     curl_easy_setopt(http_handle, CURLOPT_SSL_VERIFYPEER, false);
     curl_easy_setopt(http_handle, CURLOPT_URL, candidate.download.c_str());
