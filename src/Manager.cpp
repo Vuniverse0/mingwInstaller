@@ -359,7 +359,7 @@ void Manager::extractEnd()
         page7_set(Page7state::done);
         shortcut(installDir + createBat(),
                  installDir + createIcon(),
-                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W64/MinGWx32" : "MinGW-W64/MinGWx64"),
+                 (downloadCandidate.architecture == Arcs::i686 ? "MinGWx32" : "MinGWx64"),
                  0);
         if(desktopShortcut)
             shortcut(installDir + createBat(),
