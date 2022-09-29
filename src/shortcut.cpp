@@ -95,7 +95,7 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
     wchar_t* p = nullptr;
     std::wstring location;
     if(destination == 0){
-      HRESULT hres = SHGetKnownFolderPath(FOLDERID_CommonPrograms, 0, NULL, &p);//FOLDERID_Programs
+      HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);//FOLDERID_Programs
         location = p;
         location += L"\\mingw\\";
         std::wstring path = location;
@@ -107,7 +107,6 @@ void shortcut(std::string filePath, std::string picturePath, const std::string& 
     using convert_type = std::codecvt_utf8<wchar_t>;
     std::wstring_convert<convert_type, wchar_t> converter;
     std::string l = converter.to_bytes( location.c_str() );
-    printf("\nFolder for shotcut: %s\n", l.c_str());
 
     std::wstring n{name.begin(), name.end()};
 
