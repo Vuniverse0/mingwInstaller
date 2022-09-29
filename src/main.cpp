@@ -1,4 +1,4 @@
-const char * const version = "1.1.0";
+extern const char * const version;
 
 
 #include "pages.hpp"
@@ -43,11 +43,12 @@ void page_7();  ///download
 int main(int argc, char **argv) try {
     if(argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "v"))){
         printf("version: %s", version);
+        return 0;
     }
 
     Fl::scheme("gtk+");
 
-    G_win = new Fl_Window(400, 300, width, height, "Mingw Installer");
+    G_win = new Fl_Window(400, 300, width, height, "MinGW-W64 Installer");
     G_wiz = new Fl_Wizard(0, 0, width, height);
     G_win->icon(Manager::logo(false));
 
