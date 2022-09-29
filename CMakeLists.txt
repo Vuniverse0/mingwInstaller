@@ -55,7 +55,8 @@ IF (WIN32)
     add_compile_options(-OS -s -mwindows -Wl, -s)
     add_definitions(-DNGHTTP2_STATICLIB -DCURL_STATICLIB -DNO_SSL_DL)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            crypt32 ws2_32 wldap32 user32 shell32 comctl32 iconv unistring
-            -static png z nghttp2 ssl crypto.a psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon)
+            user32 shell32 comctl32 iconv unistring
+            -static png z nghttp2 ssl crypto.a psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon
+            crypt32 ws2_32 wldap32)
     #link_libraries(${PROJECT_NAME}  )
 ENDIF()
