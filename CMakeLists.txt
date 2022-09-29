@@ -49,13 +49,13 @@ add_executable(mingwInstaller
         src/lzma2201/C/7zStream.c
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE fltk.a fltk_images.a curl )
+target_link_libraries(${PROJECT_NAME} PRIVATE fltk fltk_images curl )
 
 IF (WIN32)
-    add_compile_options(-OS -s -mwindows)
+    add_compile_options(-OS -s -mwindows -Wl, -s)
     add_definitions(-DNGHTTP2_STATICLIB -DCURL_STATICLIB -DNO_SSL_DL)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            png z nghttp2 ssl crypto.a psl idn2 ssh2 zstd brotlidec.a brotlienc brotlicommon
-            crypt32 ws2_32 wldap32 user32 shell32 comctl32 iconv unistring )
+    png z nghttp2 ssl crypto.a psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon -static
+    -Wl, crypt32 ws2_32 wldap32 user32 shell32 comctl32 iconv unistring )
     #link_libraries(${PROJECT_NAME}  )
 ENDIF()
