@@ -94,13 +94,16 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCWSTR lpszPathLink,
 void shortcut(std::string filePath, std::string picturePath, const std::string& name, std::size_t destination)
 {
     wchar_t* p = nullptr;
-
-    if(destination == 0)
+    std::wstring location;
+    if(destination == 0){
         HRESULT hres = SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &p);
-    else if(destination == 1)
+        location = p;
+        location += L"mingw\\";
+        CreateDirectoryW(location.c_str());
+    }else if(destination == 1){
         HRESULT hres = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &p);
-
-    std::wstring location = p;
+        location = p;
+    }
 
     std::wstring n{name.begin(), name.end()};
 
