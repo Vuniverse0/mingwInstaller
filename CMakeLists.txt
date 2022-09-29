@@ -54,7 +54,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE fltk fltk_images curl)
 IF (WIN32)
     add_compile_options(-OS -s -mwindows)
     add_definitions(-DNGHTTP2_STATICLIB -DCURL_STATICLIB -DNO_SSL_DL)
-    target_link_libraries(${PROJECT_NAME} PRIVATE -static
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             png z nghttp2 ssl crypto psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon
             crypt32 ws2_32 wldap32 user32 shell32 comctl32 iconv unistring)
 ENDIF()
