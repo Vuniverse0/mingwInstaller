@@ -71,7 +71,7 @@ void page_6()
     auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
     out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
-    //TODO add check for Manager::manager.desktopShortcut;
+
     auto check_button = new Fl_Check_Button(100 + png_size, 220, 500, 25,"Create shortcut on Desktop");
     check_button->callback(check_button_cb);
     check_button->labelsize(20);

@@ -351,7 +351,7 @@ void Manager::extractEnd()
                  installDir + createIcon(),
                  (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32" : "MinGW-W64"),
                  0);
-        if(desktopShortcut) //TODO add switch to IDE
+        if(desktopShortcut)
             shortcut(installDir + createBat(),
                      installDir + createIcon(),
                      (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W32" : "MinGW-W64"),
