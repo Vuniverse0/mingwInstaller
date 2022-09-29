@@ -359,12 +359,12 @@ void Manager::extractEnd()
         page7_set(Page7state::done);
         shortcut(installDir + createBat(),
                  installDir + createIcon(),
-                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W64-x32" : "MinGW-W64-x64"),
+                 (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W64-32bit" : "MinGW-W64-64bit"),
                  0);
         if(desktopShortcut)
             shortcut(installDir + createBat(),
                      installDir + createIcon(),
-                     (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W64-x32" : "MinGW-W64-x64"),
+                     (downloadCandidate.architecture == Arcs::i686 ? "MinGW-W64-32bit" : "MinGW-W64-64bit"),
                      1);
     }else{
         showError("extractEnd: invalid status");

@@ -54,7 +54,7 @@ void page_4()
                                button_width, button_height, "@<- Back");
     back->callback(back_cb);
 
-    auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select a exceptions");
+    auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select an exceptions");
     out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 

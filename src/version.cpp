@@ -1,1 +1,1 @@
-extern const char * const version = "1.1.0";
+extern const char * const version = "1.1.1";

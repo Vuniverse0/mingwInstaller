@@ -13,7 +13,7 @@ void page_0()
     auto *g = new Fl_Group(0, 0, width, height);
 
     auto *text = new Fl_Help_View(50 + png_size, 1, 600, 275);
-    text->value("<h1>Welcome to Mingw install wizard</h1>"
+    text->value("<h1>Welcome to MinGW-W64 install wizard</h1>"
                 "<p>This installer was developed for Windows users of the MinGW-W64 compiler. "
                 "<a href=\"https://www.mingw-w64.org/\">MinGW-W64</a> is a native Windows compiler based "
                 "on the <a href=\"https://gcc.gnu.org/\">GNU C Compiler</a>. </p> <p>"
