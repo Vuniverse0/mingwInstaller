@@ -56,6 +56,6 @@ IF (WIN32)
     add_link_options(-s)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             png z nghttp2 ssl crypto psl idn2 ssh2 zstd brotlidec brotlienc brotlicommon
-            crypt32 ws2_32 wldap32 user32 shell32 comctl32 -s -mwindows -static -OS)#iconv
-    add_link_options(-liconv -lunistring)
+            crypt32 ws2_32 wldap32 user32 shell32 comctl32 -s -mwindows -static -OS)
+    target_link_libraries(${PROJECT_NAME} PUBLIC comctl32 iconv unistring -shared)
 ENDIF()
