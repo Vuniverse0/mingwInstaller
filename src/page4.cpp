@@ -12,38 +12,47 @@
 ///exceptions realization
 namespace {
     const std::array<std::string_view, 3> exceptions{
-            "sjlj\0",
-            "dwarf\0",
-            "seh\0"
+        "sjlj\0",
+        "dwarf\0",
+        "seh\0"
     };
 
-    bool isDwarf;
+    bool isDwarf = true;
     Fl_Choice *choice;
 
     void choice_callback(Fl_Button*, void*)
     {
         Manager::manager.downloadCandidate.exception =
-                (static_cast<std::size_t>(choice->value()) != 0
-                ? isDwarf
-                ? ExcRs::dwarf
-                : ExcRs::seh
-                : ExcRs::sjlj);
+            (static_cast<std::size_t>(choice->value()) != 0
+            ? isDwarf
+            ? ExcRs::dwarf
+            : ExcRs::seh
+            : ExcRs::sjlj);
     }
 }
 
 
-void update4()
+void update_5()
 {
+    Manager::manager.downloadCandidate.exception = ExcRs::sjlj;
+
     auto res_page2 = static_cast<std::uint8_t>(Manager::manager.downloadCandidate.architecture);
+    isDwarf = !res_page2;
+
+    if(!Manager::manager.getSjlj())
+    {
+        Manager::manager.downloadCandidate.exception = isDwarf ? ExcRs::dwarf : ExcRs::seh;
+        next_cb(nullptr, nullptr);
+        return;
+    }
+
     choice->clear();
     choice->add(exceptions[0].data());
     choice->add(exceptions[res_page2 + 1].data());
-    isDwarf = !res_page2;
     choice->value(0);
-    Manager::manager.downloadCandidate.exception = ExcRs::sjlj;
 }
 
-void page_4()
+void page_5()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 

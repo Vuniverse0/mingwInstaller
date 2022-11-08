@@ -18,7 +18,7 @@ namespace {
 }
 
 
-void update5()
+void update4()
 {
     const std::vector<std::size_t>& revs = Manager::manager.getRevsForCandidate();
     choice->clear();
@@ -30,12 +30,20 @@ void update5()
     choice->value(0);
 }
 
-void page_5()
+void update_5();
+
+static void update_cb(Fl_Widget*, void*)
+{
+    next_cb(nullptr, nullptr);
+    update_5();
+}
+
+void page_4()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 
     auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
-    next->callback(next_cb);
+    next->callback(update_cb);
 
     auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
                                button_width, button_height, "@<- Back");
@@ -47,7 +55,7 @@ void page_5()
 
     choice = new Fl_Choice(200 + png_size, 150, 15 * 8, 45);
 
-    update5();
+    update4();
     choice->textsize(20);
     choice->callback((Fl_Callback *) choice_callback);
 

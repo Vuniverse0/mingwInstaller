@@ -11,15 +11,15 @@ struct BuildInfo {
     Arcs architecture;
     MgRs multithreading;
     ExcRs exception;
-    size_t revision;
+    std::size_t revision;
 };
 
 struct SelectInfo {
-    size_t version = 0;
+    std::size_t version = 0;
     Arcs architecture =  Arcs::i686;
     MgRs multithreading = MgRs::win32;
-    ExcRs exception = ExcRs::sjlj;
-    size_t revision = -1;
+    ExcRs exception = ExcRs::error;
+    std::size_t revision = 0;
 };
 
 inline bool operator==(SelectInfo a, SelectInfo b)

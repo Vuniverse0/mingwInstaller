@@ -50,6 +50,15 @@ namespace {
 
 void auto_download_cb(Fl_Widget*, void*);
 
+static void update_cb(Fl_Widget*, void*)
+{
+    back_cb(nullptr, nullptr);
+    if(!Manager::manager.getSjlj())
+    {
+        back_cb(nullptr, nullptr);
+    }
+}
+
 void page_6()
 {
     auto *g = new Fl_Group(0, 0, width, height);
@@ -59,7 +68,7 @@ void page_6()
 
     auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
                                button_width, button_height, "@<- Back");
-    back->callback(back_cb);
+    back->callback(update_cb);
 
     auto *set_dir = new Fl_Button(500 + png_size, 180, 100, 25, "Choose");
     set_dir->callback(call_back_page_6);

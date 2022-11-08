@@ -7,6 +7,10 @@
 
 #include "BuildInfo.hpp"
 
+#ifndef NDEBUG
+#include "Debug.hpp"
+#endif
+
 
 class Manager final {
     explicit Manager() = default;
@@ -26,16 +30,25 @@ public:
 
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
+    bool getSjlj();
     bool desktopShortcut = false;
 private:
+
+#ifdef DEBUG_BUILD_AND_SELECT_INFO
+    template<class Manager_T>
+    friend std::ostream& operator<<(std::ostream& out, const SelectInfo& selectInfo);
+#endif
+
     const std::array<const std::string, 2> headers_strings{
             "Authorization: Bearer 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",
             "Accept: application/vnd.github+json"
     };
+
     std::array<std::string_view, 2> folderNames{
         "mingw32\0",
         "mingw64\0"
     };
+
     const BuildInfo& getCandidate();
     const std::vector<BuildInfo>& getInfo();
     static void fillBuffer(std::vector<BuildInfo>& buff, const std::string& data);

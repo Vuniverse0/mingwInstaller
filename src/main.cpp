@@ -19,13 +19,9 @@ void back_cb(Fl_Widget*,void*) { if(G_wiz) G_wiz->prev(); }
 void next_cb(Fl_Widget*,void*) { if(G_wiz) G_wiz->next(); }
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
-void showError(const char* error);
-
 void page_about(); ///about
 
 void page_0();  ///hello
-
-void page_6();  ///choose dir
 
 void page_1();  ///version
 
@@ -33,9 +29,11 @@ void page_2();  ///architecture
 
 void page_3();  ///multithreading realization (mrt)
 
-void page_4(); ///exceptions realization
+void page_4();  ///revision
 
-void page_5();  ///revision
+void page_5(); ///exceptions realization
+
+void page_6();  ///choose dir
 
 void page_7();  ///download
 
@@ -56,8 +54,11 @@ int main(int argc, char **argv) try {
     page_1();
     page_2();
     page_3();
+
     page_4();
+
     page_5();
+
     page_6();
     page_7();
 

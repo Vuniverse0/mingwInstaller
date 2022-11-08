@@ -2,4 +2,6 @@
 
 -shortcut.hpp
 
+-updater
 
+-installer updater

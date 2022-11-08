@@ -10,7 +10,7 @@
 
 
 ///exceptions realization
-void update4();
+void update_5();
 
 ///architecture
 namespace {
@@ -23,7 +23,7 @@ namespace {
 
     void choice_callback(Fl_Button *, void *) {
         Manager::manager.downloadCandidate.architecture = choice->value() ?  Arcs::x86_64 : Arcs::i686;
-        update4();
+        update_5();
     }
 }
 

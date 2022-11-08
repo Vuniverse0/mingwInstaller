@@ -209,7 +209,7 @@ void Manager::unpack()
         if(exists(mingw))
             directory_delete(folderNames[downloadCandidate.architecture == Arcs::x86_64].data());
         if(res == 1488)
-            showError("try set another folder or run installer again, acccess denied(maybe)");
+            showError("try set another folder or run installer again, access denied(maybe)");
         showError("Unpack error, try run installer again");
         return ;
     }
@@ -463,3 +463,18 @@ std::string Manager::createBat()
 }
 
 Manager Manager::manager{};
+
+bool Manager::getSjlj()
+{
+    auto it = std::find_if(buffer.begin(), buffer.end(), [&](auto &member){
+        return member.version == versions[downloadCandidate.version]
+        && member.revision == revs[downloadCandidate.revision]
+        && member.architecture == downloadCandidate.architecture
+        && member.multithreading == downloadCandidate.multithreading
+        && member.exception == ExcRs::sjlj
+    ;});
+
+    std::cout << downloadCandidate;
+
+    return it != buffer.end();
+}
