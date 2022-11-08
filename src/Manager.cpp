@@ -474,7 +474,7 @@ bool Manager::getSjlj()
         && member.exception == ExcRs::sjlj
     ;});
 
-    std::cout << downloadCandidate;
+    //std::cout << downloadCandidate;
 
     return it != buffer.end();
 }
