@@ -2,88 +2,66 @@
 
 #include "Manager.hpp"
 
-#include "home.hpp"
-
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Check_Button.H>
-#include <Fl/Fl_File_Chooser.H>
-#include <Fl/Fl_Multiline_Output.H>
-
-#include <algorithm>
+#include <Fl/Fl_Choice.H>
 
 
-///directory
+///exceptions realization
 namespace {
-    Fl_File_Chooser*  fc;
-    Fl_Multiline_Output *box;
+    const std::array<std::string_view, 2> runtimes{
+            "msvcrt\0",
+            "ucrt\0",
+    };
 
-    void choose_callback(Fl_File_Chooser *obj, void *)
-    {
-        if(fc->visible()) return;
-        Manager::manager.installDir = obj->value();
-        box->value(Manager::manager.installDir.c_str());
-        if(obj != fc)
-            throw std::runtime_error("choose_callback page0(5.5) ");
-        delete fc;
-        fc = nullptr;
-    }
+    Fl_Choice *choice;
 
-    void call_back_page_6(Fl_Widget*, void*)
+    void choice_callback(Fl_Button*, void*)
     {
-        if (!fc) {
-            fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
-            fc->callback(choose_callback);
-            fc->show();
-        }else if(!fc->visible())
-            fc->show();
-    }
-
-    void check_button_cb(Fl_Widget *button, void*)
-    {
-        Manager::manager.desktopShortcut = ((Fl_Check_Button*) button)->value();
-        printf("\n Manager desctop: %s\n", Manager::manager.desktopShortcut ? "true" : "false");
+        Manager::manager.downloadCandidate.runtime =
+            (!static_cast<std::size_t>(choice->value())
+            ? Crt::msvcrt
+            : Crt::ucrt);
     }
 }
 
-void auto_download_cb(Fl_Widget*, void*);
 
-static void update_cb(Fl_Widget*, void*)
+void update_6()
 {
-    back_cb(nullptr, nullptr);
-    if(!Manager::manager.getSjlj())
-    {
-        back_cb(nullptr, nullptr);
+    if(!Manager::manager.getCrt()){
+        next_cb(nullptr, nullptr);
+        return;
     }
+
+    Manager::manager.downloadCandidate.runtime = Crt::msvcrt;
+    choice->value(0);
 }
 
 void page_6()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 
-    auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Process");
-    next->callback(auto_download_cb);
+    auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
+    next->callback(next_cb);
 
     auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
                                button_width, button_height, "@<- Back");
-    back->callback(update_cb);
+    back->callback(back_cb);
 
-    auto *set_dir = new Fl_Button(500 + png_size, 180, 100, 25, "Choose");
-    set_dir->callback(call_back_page_6);
-
-    box = new Fl_Multiline_Output(100 + png_size, 150, 500, 25,"Install in: ");
-    Manager::manager.installDir = home();
-    box->value(Manager::manager.installDir.c_str());
-
-    auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
-    out->labelsize(45);
+    auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select a C runtime");
+    out->labelsize(50);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
 
-    auto check_button = new Fl_Check_Button(100 + png_size, 220, 500, 25,"Create shortcut on Desktop");
-    check_button->callback(check_button_cb);
-    check_button->labelsize(20);
+    choice = new Fl_Choice(200 + png_size, 150, static_cast<int>(15 * runtimes[0].size() * 2), 45);
+
+    for(auto &runtime : runtimes)
+        choice->add(runtime.data());
+
+    choice->value(0);
+    choice->textsize(20);
+    choice->callback((Fl_Callback *) choice_callback);
 
     Manager::logo();
 

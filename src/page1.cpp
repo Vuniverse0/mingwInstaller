@@ -10,7 +10,7 @@
 
 
 ///revision
-void update4();
+void update_4();
 
 ///version
 namespace {
@@ -18,7 +18,7 @@ namespace {
     void choice_callback(Fl_Button *, void *)
     {
         Manager::manager.downloadCandidate.version = static_cast<std::size_t>(choice->value());
-        update4();
+        update_4();
     }
 }
 

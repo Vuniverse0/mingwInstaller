@@ -148,6 +148,16 @@ BuildInfo Manager::parseName(const std::string& name)
                         : ExcRs::error;
                 break;
             case 6:
+                if(strncmp(tokenValue, "rev", 3) != 0) {
+                    buildInfo.runtime =
+                            strcmp(tokenValue, "msvcrt") == 0
+                            ? Crt::msvcrt
+                            : strcmp(tokenValue, "ucrt") == 0
+                              ? Crt::ucrt
+                              : Crt::error;
+                    break;
+                }
+            case 7:
                 buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
                 break;
             default: break;
@@ -474,7 +484,19 @@ bool Manager::getSjlj()
         && member.exception == ExcRs::sjlj
     ;});
 
-    //std::cout << downloadCandidate;
+    return it != buffer.end();
+}
+
+bool Manager::getCrt()
+{
+    auto it = std::find_if(buffer.begin(), buffer.end(), [&](auto &member){
+        return member.version == versions[downloadCandidate.version]
+        && member.revision == revs[downloadCandidate.revision]
+        && member.architecture == downloadCandidate.architecture
+        && member.multithreading == downloadCandidate.multithreading
+        && member.exception == downloadCandidate.exception
+        && member.runtime != Crt::empty
+    ;});
 
     return it != buffer.end();
 }

@@ -1,108 +1,89 @@
-#include "DownloadButton.hpp"
+#include "pages.hpp"
+
 #include "Manager.hpp"
 
-#include <Fl/Fl_Progress.H>
+#include "home.hpp"
+
+#include <FL/Fl_Widget.H>
 #include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Check_Button.H>
+#include <Fl/Fl_File_Chooser.H>
+#include <Fl/Fl_Multiline_Output.H>
+
+#include <algorithm>
 
 
-///download
+///directory
 namespace {
-    Fl_Progress *progress = nullptr;
-    Fl_Box *out = nullptr;
-    DownloadButton *download = nullptr;
-    Fl_Button *back = nullptr;
-}
+    Fl_File_Chooser*  fc;
+    Fl_Multiline_Output *box;
 
-void auto_download_cb(Fl_Widget* w, void* d)
-{
-    if(download)
-        download->download();
-    else
-        throw std::runtime_error("download page 6");
-    next_cb(w, d);
-}
+    void choose_callback(Fl_File_Chooser *obj, void *)
+    {
+        if(fc->visible()) return;
+        Manager::manager.installDir = obj->value();
+        box->value(Manager::manager.installDir.c_str());
+        if(obj != fc)
+            throw std::runtime_error("choose_callback page0(5.5) ");
+        delete fc;
+        fc = nullptr;
+    }
 
-void auto_extract()
-{
-    if(download)
-        download->extracting();
-    else
-        throw std::runtime_error("download page 6");
-}
+    void call_back_page_6(Fl_Widget*, void*)
+    {
+        if (!fc) {
+            fc = new Fl_File_Chooser(nullptr, nullptr, 4, nullptr);
+            fc->callback(choose_callback);
+            fc->show();
+        }else if(!fc->visible())
+            fc->show();
+    }
 
-enum class Page7state{download, downloading, extract, extracting, done, error};
-
-void page7_set(Page7state state)
-{
-    if(  !out   ) throw std::runtime_error("out not defined page 6");
-    if(!progress) throw std::runtime_error("progress not defined page 6");
-    if(!download) throw std::runtime_error("download not defined page 6");
-
-    switch (state) {
-        case Page7state::download:
-            out->label("Download              ");
-            progress->hide();
-            progress->value(0.f);
-            break;
-        case Page7state::downloading:
-            out->label("Downloading...       ");
-            progress->show();
-            break;
-        case Page7state::extract:
-            out->label("Extract              ");
-            progress->hide();
-            progress->value(0.f);
-            break;
-        case Page7state::extracting:
-            out->label("Extracting...       ");
-            progress->show();
-            break;
-        case Page7state::done:
-            out->label("Done              ");
-            download->callback(done_cb);
-            download->label("Finish");
-            if(back) back->hide();
-            else throw std::runtime_error("back not defined page 6");
-            break;
-        case Page7state::error:
-            throw std::runtime_error("state::error page6");
+    void check_button_cb(Fl_Widget *button, void*)
+    {
+        Manager::manager.desktopShortcut = ((Fl_Check_Button*) button)->value();
+        printf("\n Manager desctop: %s\n", Manager::manager.desktopShortcut ? "true" : "false");
     }
 }
 
-void progressSet(float rate)
-{
-    if(progress) progress->value(rate);
-    else throw std::runtime_error("progress not defined page 6");
-}
+void auto_download_cb(Fl_Widget*, void*);
 
-static void reset(Fl_Widget *button, void *data)
+static void update_cb(Fl_Widget*, void*)
 {
-    Manager::manager.cancel();
-    if(download) download->downloading();
-    page7_set(Page7state::download);
-    back_cb(button, data);
+    back_cb(nullptr, nullptr);
+    if(!Manager::manager.getSjlj())
+    {
+        back_cb(nullptr, nullptr);
+    }
 }
 
 void page_7()
 {
     auto *g = new Fl_Group(0, 0, width, height);
 
-    download = new DownloadButton(button_x + png_size, button_y, button_width, button_height, "Download");
+    auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Process");
+    next->callback(auto_download_cb);
 
-    back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
-                         button_width, button_height, "@<- Back");
-    back->callback(reset);
+    auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
+                               button_width, button_height, "@<- Back");
+    back->callback(update_cb);
 
-    progress = new Fl_Progress(40 + png_size, 200, 500, 25);
-    progress->maximum(1);
-    progress->minimum(0);
-    progress->hide();
-    progress->value(0.f);
+    auto *set_dir = new Fl_Button(500 + png_size, 180, 100, 25, "Choose");
+    set_dir->callback(call_back_page_6);
 
-    out = new Fl_Box(20 + png_size, 100, 25, 25, "Download");
-    out->labelsize(50);
+    box = new Fl_Multiline_Output(100 + png_size, 150, 500, 25,"Install in: ");
+    Manager::manager.installDir = home();
+    box->value(Manager::manager.installDir.c_str());
+
+    auto *out = new Fl_Box(20 + png_size, 100, 500, 25, "Select directory for installation");
+    out->labelsize(45);
     out->align(FL_ALIGN_TOP | FL_ALIGN_LEFT);
+
+    auto check_button = new Fl_Check_Button(100 + png_size, 220, 500, 25,"Create shortcut on Desktop");
+    check_button->callback(check_button_cb);
+    check_button->labelsize(20);
 
     Manager::logo();
 

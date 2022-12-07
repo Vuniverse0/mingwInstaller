@@ -44,7 +44,7 @@ void page_2()
 
     choice = new Fl_Choice(200 + png_size, 150, static_cast<int>(15 * archs[0].size() * 2), 45);
 
-    for (auto &arch: archs)
+    for(auto &arch : archs)
         choice->add(arch.data());
 
     choice->value(0);

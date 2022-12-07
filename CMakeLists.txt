@@ -12,13 +12,14 @@ add_executable(mingwInstaller
 
         src/page_about.cpp
         src/page0.cpp
-        src/page6.cpp
         src/page1.cpp
         src/page2.cpp
         src/page3.cpp
         src/page4.cpp
         src/page5.cpp
+        src/page6.cpp
         src/page7.cpp
+        src/page8.cpp
 
         src/logo.cpp
         src/icon.cpp

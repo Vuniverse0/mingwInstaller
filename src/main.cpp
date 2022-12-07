@@ -19,23 +19,35 @@ void back_cb(Fl_Widget*,void*) { if(G_wiz) G_wiz->prev(); }
 void next_cb(Fl_Widget*,void*) { if(G_wiz) G_wiz->next(); }
 void done_cb(Fl_Widget*w,void*) { w->window()->hide(); }
 
-void page_about(); ///about
+///about
+void page_about();
 
-void page_0();  ///hello
+///hello
+void page_0();
 
-void page_1();  ///version
+///version
+void page_1();
 
-void page_2();  ///architecture
+///architecture
+void page_2();
 
-void page_3();  ///multithreading realization (mrt)
+///multithreading realization (mrt)
+void page_3();
 
-void page_4();  ///revision
+///revision
+void page_4();
 
-void page_5(); ///exceptions realization
+///exceptions realization
+void page_5();
 
-void page_6();  ///choose dir
+///C runtime
+void page_6();
 
-void page_7();  ///download
+///choose dir
+void page_7();
+
+///download
+void page_8();
 
 int main(int argc, char **argv) try {
     if(argc > 1 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "v"))){
@@ -54,13 +66,11 @@ int main(int argc, char **argv) try {
     page_1();
     page_2();
     page_3();
-
     page_4();
-
     page_5();
-
     page_6();
     page_7();
+    page_8();
 
     G_wiz->end();
     G_win->end();

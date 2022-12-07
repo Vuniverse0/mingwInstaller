@@ -14,6 +14,7 @@
 
 class Manager final {
     explicit Manager() = default;
+
 public:
     static Manager manager;
 
@@ -31,9 +32,10 @@ public:
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
     bool getSjlj();
+    bool getCrt();
     bool desktopShortcut = false;
-private:
 
+private:
 #ifdef DEBUG_BUILD_AND_SELECT_INFO
     template<class Manager_T>
     friend std::ostream& operator<<(std::ostream& out, const SelectInfo& selectInfo);
