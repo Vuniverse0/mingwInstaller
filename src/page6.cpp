@@ -34,9 +34,17 @@ void update_6()
         next_cb(nullptr, nullptr);
         return;
     }
-
     Manager::manager.downloadCandidate.runtime = Crt::msvcrt;
     choice->value(0);
+}
+
+static void update_cb(Fl_Widget*, void*)
+{
+    back_cb(nullptr, nullptr);
+    if(!Manager::manager.getSjlj())
+    {
+        back_cb(nullptr, nullptr);
+    }
 }
 
 void page_6()
@@ -48,7 +56,7 @@ void page_6()
 
     auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
                                button_width, button_height, "@<- Back");
-    back->callback(back_cb);
+    back->callback(update_cb);
 
     auto *out = new Fl_Box(20 + png_size, 100, 25, 25, "Select a C runtime");
     out->labelsize(50);

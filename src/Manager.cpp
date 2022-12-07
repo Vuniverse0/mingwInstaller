@@ -153,9 +153,11 @@ BuildInfo Manager::parseName(const std::string& name)
                             strcmp(tokenValue, "msvcrt") == 0
                             ? Crt::msvcrt
                             : strcmp(tokenValue, "ucrt") == 0
-                              ? Crt::ucrt
-                              : Crt::error;
+                            ? Crt::ucrt
+                            : Crt::error;
                     break;
+                }else{
+                    buildInfo.runtime = Crt::empty;
                 }
             case 7:
                 buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
