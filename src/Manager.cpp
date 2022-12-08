@@ -40,7 +40,7 @@ std::size_t directory_delete(std::string pathname);
 //Curl progress
 int progress_func(void*, double TotalToDownload, double NowDownloaded, double, double)
 {
-    if (TotalToDownload > 0.0)
+    if(TotalToDownload > 0.0)
         progressSet(static_cast<float>(NowDownloaded / TotalToDownload));
     return 0;
 }
@@ -48,7 +48,7 @@ int progress_func(void*, double TotalToDownload, double NowDownloaded, double, d
 const std::vector<std::size_t>& Manager::getRevsForCandidate()
 {
     revs.clear();
-    for(auto& it: buffer){
+    for(auto &it : buffer){
         if(it.version == versions[downloadCandidate.version])
             revs.push_back(it.revision);
     }
@@ -59,20 +59,21 @@ const std::vector<std::size_t>& Manager::getRevsForCandidate()
 
 const std::vector<std::string>& Manager::getVersions()
 {
-    if(versions.empty()) getInfo();
+    if(versions.empty())
+        getInfo();
     return versions;
 }
 
 const std::vector<BuildInfo>& Manager::getInfo()
 {
-    if(buffer.empty()) {
+    if(buffer.empty()){
         CURL *curl;
         CURLcode res;
 
         std::string readBuffer;
         curl = curl_easy_init();
 
-        if(curl) {
+        if(curl){
 	        curl_easy_setopt(curl , CURLOPT_VERBOSE, 1L);
 	        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/niXman/mingw-builds-binaries/releases");
@@ -185,7 +186,8 @@ const BuildInfo &Manager::getCandidate()
             && member.revision == revs[downloadCandidate.revision]
             && member.architecture == downloadCandidate.architecture
             && member.multithreading == downloadCandidate.multithreading
-            && member.exception == downloadCandidate.exception;
+            && member.exception == downloadCandidate.exception
+            && member.runtime == downloadCandidate.runtime;
         });
     if(it == getInfo().end()){
         showError("Logical error");

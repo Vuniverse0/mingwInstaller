@@ -34,6 +34,12 @@ namespace {
     }
 }
 
+static void update_cb(Fl_Widget*, void *)
+{
+    next_cb(nullptr, nullptr);
+    update_6();
+}
+
 void update_5()
 {
     Manager::manager.downloadCandidate.exception = ExcRs::sjlj;
@@ -43,8 +49,7 @@ void update_5()
 
     if(!Manager::manager.getSjlj()){
         Manager::manager.downloadCandidate.exception = isDwarf ? ExcRs::dwarf : ExcRs::seh;
-        next_cb(nullptr, nullptr);
-        update_6();
+        update_cb(nullptr, nullptr);
         return;
     }
 
@@ -52,7 +57,6 @@ void update_5()
     choice->add(exceptions[0].data());
     choice->add(exceptions[res_page2 + 1].data());
     choice->value(0);
-    update_6();
 }
 
 void page_5()
@@ -60,7 +64,7 @@ void page_5()
     auto *g = new Fl_Group(0, 0, width, height);
 
     auto *next = new Fl_Button(button_x+png_size, button_y, button_width, button_height, "Next @->");
-    next->callback(next_cb);
+    next->callback(update_cb);
 
     auto *back = new Fl_Button(button_x - button_width - 20 + png_size, button_y,
                                button_width, button_height, "@<- Back");

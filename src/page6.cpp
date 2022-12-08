@@ -21,7 +21,7 @@ namespace {
     void choice_callback(Fl_Button*, void*)
     {
         Manager::manager.downloadCandidate.runtime =
-            (!static_cast<std::size_t>(choice->value())
+            (static_cast<std::size_t>(choice->value()) == 0
             ? Crt::msvcrt
             : Crt::ucrt);
     }
@@ -42,9 +42,7 @@ static void update_cb(Fl_Widget*, void*)
 {
     back_cb(nullptr, nullptr);
     if(!Manager::manager.getSjlj())
-    {
         back_cb(nullptr, nullptr);
-    }
 }
 
 void page_6()

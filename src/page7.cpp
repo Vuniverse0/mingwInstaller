@@ -53,9 +53,9 @@ void auto_download_cb(Fl_Widget*, void*);
 static void update_cb(Fl_Widget*, void*)
 {
     back_cb(nullptr, nullptr);
-    if(!Manager::manager.getSjlj())
+    if(!Manager::manager.getCrt())
     {
-        if(!Manager::manager.getCrt())
+        if(!Manager::manager.getSjlj())
             back_cb(nullptr, nullptr);
         back_cb(nullptr, nullptr);
     }
