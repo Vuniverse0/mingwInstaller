@@ -36,6 +36,8 @@ namespace {
 static void update_cb(Fl_Widget*, void *)
 {
     next_cb(nullptr, nullptr);
+    if(!Manager::manager.getCrt())
+        next_cb(nullptr, nullptr);
     update_6();
 }
 
@@ -48,7 +50,7 @@ void update_5()
 
     if(!Manager::manager.getSjlj()){
         Manager::manager.downloadCandidate.exception = isDwarf ? ExcRs::dwarf : ExcRs::seh;
-        update_cb(nullptr, nullptr);
+        update_6();
         return;
     }
 

@@ -36,6 +36,11 @@ static void update_cb(Fl_Widget*, void*)
 {
     next_cb(nullptr, nullptr);
     update_5();
+    if(!Manager::manager.getSjlj()){
+        if(!Manager::manager.getCrt())
+            next_cb(nullptr, nullptr);
+        next_cb(nullptr, nullptr);
+    }
 }
 
 void page_4()

@@ -32,7 +32,6 @@ void update_6()
 {
     if(!Manager::manager.getCrt()){
         Manager::manager.downloadCandidate.runtime = Crt::empty;
-        next_cb(nullptr, nullptr);
         return;
     }
     Manager::manager.downloadCandidate.runtime = Crt::msvcrt;
