@@ -30,7 +30,6 @@ namespace {
             ? ExcRs::dwarf
             : ExcRs::seh
             : ExcRs::sjlj);
-        update_6();
     }
 }
 
