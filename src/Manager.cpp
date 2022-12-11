@@ -149,8 +149,8 @@ BuildInfo Manager::parseName(const std::string& name)
                         : ExcRs::error;
                 break;
             case 5:
-                if(strncmp(tokenValue, "rev", 3) != 0 && strncmp(tokenValue, "rt", 2) != 0) {
-                    //std::cout<<"TokenValue"<<tokenValue<<std::endl;
+                if(strncmp(tokenValue, "rt", 2) != 0) {
+                    //std::cout<<"TokenValue "<<tokenValue<<std::endl;
                     buildInfo.runtime =
                             strcmp(tokenValue, "msvcrt") == 0
                             ? Crt::msvcrt
@@ -160,8 +160,12 @@ BuildInfo Manager::parseName(const std::string& name)
                     break;
                 }else{
                     buildInfo.runtime = Crt::empty;
+                    i++;
                 }
+            case 6:
+                break;
             case 7:
+                //std::cout<<"TokenValue "<<tokenValue<<std::endl;
                 buildInfo.revision = static_cast<std::size_t>(std::stoi(tokenValue+3));
                 break;
             default: break;
