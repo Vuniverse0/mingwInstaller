@@ -148,8 +148,9 @@ BuildInfo Manager::parseName(const std::string& name)
                         ? ExcRs::seh
                         : ExcRs::error;
                 break;
-            case 6:
-                if(strncmp(tokenValue, "rev", 3) != 0) {
+            case 5:
+                if(strncmp(tokenValue, "rev", 3) != 0 && strncmp(tokenValue, "rt", 2) != 0) {
+                    //std::cout<<"TokenValue"<<tokenValue<<std::endl;
                     buildInfo.runtime =
                             strcmp(tokenValue, "msvcrt") == 0
                             ? Crt::msvcrt
@@ -190,7 +191,12 @@ const BuildInfo &Manager::getCandidate()
             && member.runtime == downloadCandidate.runtime;
         });
     if(it == getInfo().end()){
-        showError("Logical error");
+#ifndef NDEBUG
+        for(auto &item : getInfo())
+            std::cerr<<item<<std::endl;
+        std::cerr<<"\n\n\n\n"<<downloadCandidate<<std::endl;
+#endif
+        showError("Logical error\n");
         throw std::runtime_error("Can't find build");
     }
     last_build = &(*it);
