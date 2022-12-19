@@ -1,12 +1,10 @@
 #ifndef MINGWINSTALLER_PAGES_HPP
 #define MINGWINSTALLER_PAGES_HPP
 
-#include <vector>
-#include <string>
-#include <stdexcept>
+#include <cstdint>
 
-#include <FL/Fl.H>
-#include <FL/Fl_Widget.H>
+
+class Fl_Widget;
 
 constexpr std::size_t width = 650 + 300;
 constexpr std::size_t height = 300 + 10;

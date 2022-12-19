@@ -2,6 +2,7 @@
 #define MINGWINSTALLER_MANAGER_HPP
 
 #include <array>
+#include <vector>
 
 #include <FL/Fl_RGB_Image.H>
 

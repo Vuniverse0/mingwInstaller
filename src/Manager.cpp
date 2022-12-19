@@ -5,6 +5,8 @@
 
 #include <curl/curl.h>
 
+#include <FL/Fl.H>
+#include <FL/Fl_Widget.H>
 #include <Fl/Fl_PNG_Image.H>
 #include <FL/Fl_Box.H>
 

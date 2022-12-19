@@ -1,6 +1,8 @@
 #ifndef MINGWINSTALLER_BUILDINFO_HPP
 #define MINGWINSTALLER_BUILDINFO_HPP
 
+#include <string>
+
 #include "pages.hpp"
 
 
