@@ -35,6 +35,7 @@ public:
     bool getSjlj();
     bool getCrt();    
     bool getMcf();
+    bool areMcf();
     bool desktopShortcut = false;
 
 private:
