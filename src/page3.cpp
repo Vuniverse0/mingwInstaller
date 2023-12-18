@@ -47,7 +47,7 @@ void page_3()
     choice = new Fl_Choice(200 + png_size, 150,
                            static_cast<int>(15 * multithreading_realizations[0].size() * 2), 45);
 
-    for (auto i = 0; i < (Manager::manager.getMcf()?2:3); ++i)
+    for (auto i = 0; i < (Manager::manager.areMcf()?2:3); ++i)
         choice->add(multithreading_realizations[i].data());
 
     choice->value(0);
