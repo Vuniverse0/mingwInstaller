@@ -138,6 +138,8 @@ BuildInfo Manager::parseName(const std::string& name)
                         ? MgRs::win32
                         : strcmp(tokenValue, "posix") == 0
                         ? MgRs::posix
+			: strcmp(tokenValue, "mcf") == 0
+			? MgRs::mcf
                         : MgRs::error;
                 break;
             case 4:
@@ -517,7 +519,15 @@ bool Manager::getCrt()
     return it != buffer.end();
 }
 
-bool getMcf()
+bool getMcf()//TODO rename to are and are rename to get
 {
     return (downloadCandidate.multithreading == MgRs::mcf);
+}
+bool areMcf()
+{
+    auto it = std::find_if(buffer.begin(), buffer.end(), [&](auto &member){
+        return  member.multithreading == MgRs::mcf
+    ;});
+
+    return it != buffer.end();
 }
