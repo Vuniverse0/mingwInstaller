@@ -19,7 +19,7 @@ void back_cb(Fl_Widget*, void*);
 void done_cb(Fl_Widget*, void*);
 
 enum class ExcRs{ sjlj, dwarf, seh, error};
-enum class MgRs{ win32, posix, error};
+enum class MgRs{ win32, posix, mcf, error};
 enum class Arcs{ i686, x86_64, error};
 enum class Crt{ empty, msvcrt, ucrt, error};
 
