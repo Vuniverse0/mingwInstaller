@@ -33,7 +33,8 @@ public:
     const std::vector<std::string>& getVersions();
     const std::vector<std::size_t>& getRevsForCandidate();
     bool getSjlj();
-    bool getCrt();
+    bool getCrt();    
+    bool getMcf();
     bool desktopShortcut = false;
 
 private:
