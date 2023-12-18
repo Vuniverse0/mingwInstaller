@@ -30,10 +30,25 @@ namespace {
 
 void update_6()
 {
+    if(Manager::manager.getMcf()){
+        Manager::manager.downloadCandidate.runtime = Crt::ucrt;
+        choice->clear();
+        choice->add(runtimes[1]);
+        choice->value(0);
+        return;
+    }else{
+        choice->clear();
+        for(auto &runtime : runtimes)
+            choice->add(runtime.data());
+        choice->value(0);
+        Manager::manager.downloadCandidate.runtime = Crt::msvcrt;
+    }
+    
     if(!Manager::manager.getCrt()){
         Manager::manager.downloadCandidate.runtime = Crt::empty;
         return;
     }
+    
     Manager::manager.downloadCandidate.runtime = Crt::msvcrt;
     choice->value(0);
 }
