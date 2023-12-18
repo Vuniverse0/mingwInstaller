@@ -516,3 +516,8 @@ bool Manager::getCrt()
 
     return it != buffer.end();
 }
+
+bool getMcf()
+{
+    return (downloadCandidate.multithreading == MgRs::mcf);
+}
