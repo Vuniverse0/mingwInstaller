@@ -519,11 +519,11 @@ bool Manager::getCrt()
     return it != buffer.end();
 }
 
-bool getMcf()//TODO rename to are and are rename to get
+bool Manager::getMcf()//TODO rename to are and are rename to get
 {
     return (downloadCandidate.multithreading == MgRs::mcf);
 }
-bool areMcf()
+bool Manager::areMcf()
 {
     auto it = std::find_if(buffer.begin(), buffer.end(), [&](auto &member){
         return  member.multithreading == MgRs::mcf

@@ -33,7 +33,7 @@ void update_6()
     if(Manager::manager.getMcf()){
         Manager::manager.downloadCandidate.runtime = Crt::ucrt;
         choice->clear();
-        choice->add(runtimes[1]);
+        choice->add(runtimes[1].data());
         choice->value(0);
         return;
     }else{
